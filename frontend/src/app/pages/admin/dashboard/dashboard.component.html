@@ -48,6 +48,13 @@
         </div>
       </div>
 
+      <button class="topbar-theme"
+              (click)="theme.toggle()"
+              [attr.aria-label]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+              [title]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
+        <span class="material-icons">{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+      </button>
+
       <div class="topbar-user" title="Signed in admin">
         <div class="user-avatar">{{ adminName[0]?.toUpperCase() }}</div>
         <div class="user-stack">

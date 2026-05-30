@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { ThemeService } from '../../../core/services/theme.service';
 import { TodoWidgetComponent } from '../../../shared/todo-widget/todo-widget.component';
 
 @Component({
@@ -15,6 +16,7 @@ import { TodoWidgetComponent } from '../../../shared/todo-widget/todo-widget.com
 export class DashboardComponent implements OnInit, OnDestroy {
   private auth = inject(AuthService);
   toast = inject(ToastService);
+  theme = inject(ThemeService);
   sidebarOpen = false;
 
   /* ===== Live clock ===== */
