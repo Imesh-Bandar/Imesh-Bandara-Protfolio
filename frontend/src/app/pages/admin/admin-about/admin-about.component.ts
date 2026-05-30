@@ -76,7 +76,12 @@ export class AdminAboutComponent implements OnInit, AfterViewInit {
     this.saving = true; this.msg = ''; this.error = '';
     this.toast.info('Saving changes...');
     const fd = new FormData();
-    Object.entries(this.form).forEach(([k, v]) => fd.append(k, String(v)));
+    // Skip URL string fields that share names with file upload fields —
+    // they would collide with multer's .fields() parser and break the upload.
+    Object.entries(this.form).forEach(([k, v]) => {
+      if (k === 'profileImage' || k === 'signature') return;
+      fd.append(k, String(v));
+    });
     if (this.imageFile) fd.append('profileImage', this.imageFile);
     if (this.signatureFile) fd.append('signature', this.signatureFile);
     this.api.saveAbout(fd).subscribe({
