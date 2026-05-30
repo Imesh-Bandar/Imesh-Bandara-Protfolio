@@ -1,0 +1,57 @@
+<div class="admin-header"><h2>Skills</h2></div>
+
+<div class="alert alert-success" *ngIf="msg">{{ msg }}</div>
+<div class="alert alert-error"   *ngIf="error">{{ error }}</div>
+
+<div class="form-card">
+  <h4 style="margin-bottom:1.2rem">{{ editing ? 'Edit Skill' : 'Add Skill' }}</h4>
+  <div class="grid-2">
+    <div class="form-group">
+      <label>Category</label>
+      <select [(ngModel)]="form.category">
+        <option value="">Select category</option>
+        <option *ngFor="let c of categories" [value]="c">{{ c }}</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Skill Name</label>
+      <input [(ngModel)]="form.name" placeholder="e.g. Angular">
+    </div>
+  </div>
+  <div class="form-group">
+    <label>Proficiency: {{ form.proficiency }}%</label>
+    <input type="range" [(ngModel)]="form.proficiency" min="10" max="100" step="5" style="width:100%;accent-color:var(--primary)">
+    <div class="skill-bar-wrap" style="margin-top:.5rem"><div class="skill-bar" [style.width.%]="form.proficiency"></div></div>
+  </div>
+  <div style="display:flex;gap:.75rem">
+    <button class="btn btn-primary" (click)="save()" [disabled]="saving">{{ saving ? 'Saving...' : editing ? 'Update' : 'Add Skill' }}</button>
+    <button class="btn btn-outline" *ngIf="editing" (click)="reset()">Cancel</button>
+  </div>
+</div>
+
+<div *ngFor="let cat of groupedCategories()" style="margin-bottom:1.5rem">
+  <h4 class="cat-label">{{ cat }}</h4>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Skill</th><th>Proficiency</th><th>Actions</th></tr></thead>
+      <tbody>
+        <tr *ngFor="let s of byCategory(cat)">
+          <td>{{ s.name }}</td>
+          <td>
+            <div style="display:flex;align-items:center;gap:.75rem">
+              <div class="skill-bar-wrap" style="width:120px"><div class="skill-bar" [style.width.%]="s.proficiency"></div></div>
+              <small>{{ s.proficiency }}%</small>
+            </div>
+          </td>
+          <td>
+            <button class="btn btn-outline btn-sm" (click)="edit(s)" style="margin-right:.4rem">Edit</button>
+            <button class="btn btn-danger btn-sm" (click)="delete(s._id!)">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<p *ngIf="!skills.length" style="color:var(--text-muted)">No skills yet.</p>
+
+<style>.cat-label { font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);margin-bottom:.5rem; }</style>

@@ -1,0 +1,479 @@
+<!-- ===== LOADING OVERLAY ===== -->
+<div class="page-loader" *ngIf="loading">
+  <div class="loader-inner">
+    <div class="loader-ring"></div>
+    <p class="loader-text">Loading portfolio<span class="loader-dots"></span></p>
+  </div>
+</div>
+
+<!-- ===== NAVBAR ===== -->
+<nav class="navbar" [class.scrolled]="scrolled">
+  <div class="container nav-inner">
+    <a class="nav-brand" (click)="scrollTo('hero')">
+      <span class="brand-dot"></span>{{ about?.name || 'Portfolio' }}
+    </a>
+
+    <div class="nav-actions">
+      <button class="burger" (click)="menuOpen = !menuOpen" [class.open]="menuOpen">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <ul class="nav-links" [class.open]="menuOpen">
+      <li><a (click)="scrollTo('about')">About</a></li>
+      <li><a (click)="scrollTo('projects')">Projects</a></li>
+      <li><a (click)="scrollTo('skills')">Skills</a></li>
+      <li><a (click)="scrollTo('tools')">Tools</a></li>
+      <li><a (click)="scrollTo('sdlc')">Process</a></li>
+      <li><a (click)="scrollTo('education')">Education</a></li>
+      <li><a (click)="scrollTo('experience')">Experience</a></li>
+      <li><a (click)="scrollTo('feedback')">Feedback</a></li>
+      <li><a (click)="scrollTo('contact')">Contact</a></li>
+      <li class="nav-theme-item">
+        <button class="theme-toggle" (click)="theme.toggle()" [attr.aria-label]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'" title="Toggle dark/light mode">
+          <span class="material-icons">{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+        </button>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section id="hero" class="hero">
+  <div class="container hero-inner">
+    <div class="hero-text">
+      <p class="hero-greeting">Hello, I'm</p>
+      <h1>{{ about?.name || 'Imesh' }}</h1>
+      <h2 class="hero-role">{{ about?.title }}</h2>
+      <p class="hero-tagline">{{ about?.tagline }}</p>
+      <div class="hero-stats">
+        <div class="stat"><span>{{ about?.yearsOfExp }}+</span><small>Years Exp.</small></div>
+        <div class="stat"><span>{{ projects.length }}+</span><small>Projects</small></div>
+        <div class="stat"><span>{{ skills.length }}+</span><small>Skills</small></div>
+      </div>
+      <div class="hero-actions">
+        <button class="btn btn-primary" (click)="scrollTo('contact')">Get In Touch</button>
+        <a [href]="resumeUrl" class="btn btn-outline" download>Download CV</a>
+      </div>
+    </div>
+    <div class="hero-avatar" *ngIf="about?.profileImage">
+      <img [src]="'http://localhost:5000' + about!.profileImage" [alt]="about?.name">
+    </div>
+    <div class="hero-avatar-placeholder" *ngIf="!about?.profileImage">
+      <div class="avatar-icon">{{ (about?.name || 'I')[0] }}</div>
+    </div>
+  </div>
+  <div class="hero-scroll" (click)="scrollTo('about')">
+    <span class="scroll-arrow">↓</span>
+  </div>
+</section>
+
+<!-- ===== ABOUT ===== -->
+<section id="about" class="section">
+  <div class="container">
+    <h2 class="section-title">About <span>Me</span></h2>
+    <p class="section-subtitle">Who I am and what drives me</p>
+    <div class="about-grid" *ngIf="about">
+      <div class="about-bio card">
+        <p>{{ about.bio }}</p>
+        <div class="about-meta">
+          <div class="meta-item" *ngIf="about.location">
+            <span class="material-icons">location_on</span>{{ about.location }}
+          </div>
+          <div class="meta-item">
+            <span class="material-icons">work</span>{{ about.yearsOfExp }}+ Years Experience
+          </div>
+          <div class="meta-item">
+            <span class="material-icons">email</span>{{ contact?.email }}
+          </div>
+        </div>
+        <div class="about-signature" *ngIf="about.signature">
+          <img [src]="'http://localhost:5000' + about.signature" [alt]="about.name + ' signature'" class="sig-image">
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROJECTS ===== -->
+<section id="projects" class="section section-alt">
+  <div class="container">
+    <h2 class="section-title">My <span>Projects</span></h2>
+    <p class="section-subtitle">What I've built</p>
+    <div class="grid-2">
+      <div class="card project-card" *ngFor="let p of projects">
+        <div class="project-img" *ngIf="p.image">
+          <img [src]="'http://localhost:5000' + p.image" [alt]="p.title">
+        </div>
+        <div class="project-img-placeholder" *ngIf="!p.image">
+          <span class="material-icons">code</span>
+        </div>
+        <div class="project-body">
+          <h3>{{ p.title }}</h3>
+          <p>{{ p.description }}</p>
+          <div class="project-tags">
+            <span class="tag" *ngFor="let t of p.techStack">{{ t }}</span>
+          </div>
+          <div class="project-links">
+            <a *ngIf="p.githubUrl" [href]="p.githubUrl" target="_blank" class="btn btn-outline btn-sm">GitHub</a>
+            <a *ngIf="p.liveUrl" [href]="p.liveUrl" target="_blank" class="btn btn-primary btn-sm">Live Demo</a>
+          </div>
+          <div class="project-owner" *ngIf="p.ownerName">
+            <small>Client: {{ p.ownerName }}</small>
+            <small *ngIf="p.ownerEmail"> · {{ p.ownerEmail }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SKILLS ===== -->
+<section id="skills" class="section">
+  <div class="container">
+    <h2 class="section-title">My <span>Skills</span></h2>
+    <p class="section-subtitle">Technologies I work with</p>
+    <div class="skills-grid">
+      <div class="skill-category card" *ngFor="let cat of skillCategories">
+        <h4 class="cat-title">{{ cat }}</h4>
+        <div class="skill-item" *ngFor="let s of skillsByCategory[cat]">
+          <div class="skill-header">
+            <div class="skill-name-with-logo">
+              <div class="skill-logo" *ngIf="getSkillLogo(s)">
+                <img [src]="getSkillLogo(s)!" [alt]="s.name" class="skill-img">
+              </div>
+              <span class="material-icons skill-icon-fallback" *ngIf="!getSkillLogo(s)">code</span>
+              <span>{{ s.name }}</span>
+            </div>
+            <span class="skill-pct">{{ s.proficiency }}%</span>
+          </div>
+          <div class="skill-bar-wrap">
+            <div class="skill-bar" [style.width.%]="s.proficiency"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TOOLS ===== -->
+<section id="tools" class="section section-alt">
+  <div class="container">
+    <h2 class="section-title">My <span>Tools</span></h2>
+    <p class="section-subtitle">What I use to build software</p>
+    <div class="tools-grid">
+      <div class="tool-chip card" *ngFor="let t of tools">
+        <div class="tool-logo" *ngIf="getToolLogo(t)">
+          <img [src]="getToolLogo(t)!" [alt]="t.name" class="tool-img">
+        </div>
+        <span class="material-icons tool-icon" *ngIf="!getToolLogo(t)">build</span>
+        <span>{{ t.name }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SDLC PROCESS ===== -->
+<section id="sdlc" class="section">
+  <div class="container">
+    <h2 class="section-title">Development <span>Process</span></h2>
+    <p class="section-subtitle">How I work with clients — from idea to launch</p>
+    <div class="sdlc-wrapper">
+      <div class="sdlc-grid">
+        <div class="sdlc-item" *ngFor="let s of sdlc; let last = last">
+          <div class="sdlc-step card">
+            <div class="step-number">{{ s.phase }}</div>
+            <span class="material-icons step-icon">{{ s.icon || 'circle' }}</span>
+            <h4>{{ s.title }}</h4>
+            <p>{{ s.description }}</p>
+          </div>
+          <div class="sdlc-connector" *ngIf="!last"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== EDUCATION ===== -->
+<section id="education" class="section section-alt">
+  <div class="container">
+    <h2 class="section-title">My <span>Education</span></h2>
+    <p class="section-subtitle">Academic background and certifications</p>
+
+    <div class="edu-group" *ngIf="getEduByType('degree').length">
+      <h4 class="edu-group-title"><span class="material-icons">school</span> Degree</h4>
+      <div class="edu-card card" *ngFor="let e of getEduByType('degree')">
+        <div class="edu-header">
+          <div>
+            <h4>{{ e.title }}</h4>
+            <p>{{ e.institution }}<span *ngIf="e.grade"> · {{ e.grade }}</span></p>
+          </div>
+          <span class="badge" [class.badge-progress]="e.status === 'in-progress'">{{ e.status === 'in-progress' ? 'In
+            Progress' : 'Completed' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="edu-group" *ngIf="getEduByType('diploma').length">
+      <h4 class="edu-group-title"><span class="material-icons">workspace_premium</span> Diploma</h4>
+      <div class="edu-card card" *ngFor="let e of getEduByType('diploma')">
+        <div class="edu-header">
+          <div>
+            <h4>{{ e.title }}</h4>
+            <p>{{ e.institution }}<span *ngIf="e.grade"> · {{ e.grade }}</span></p>
+          </div>
+          <span class="badge">{{ e.status === 'in-progress' ? 'In Progress' : 'Completed' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="edu-group" *ngIf="getEduByType('certification').length">
+      <h4 class="edu-group-title"><span class="material-icons">verified</span> Certifications</h4>
+      <div class="certs-grid">
+        <div class="cert-card card" *ngFor="let e of getEduByType('certification')">
+          <div class="cert-icon"><span class="material-icons">{{ e.status === 'in-progress' ? 'pending' : 'task_alt'
+              }}</span></div>
+          <div>
+            <h5>{{ e.title }}</h5>
+            <small>{{ e.institution }}</small>
+          </div>
+          <span class="badge" [class.badge-progress]="e.status === 'in-progress'">{{ e.status === 'in-progress' ? 'In
+            Progress' : '✓' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== EXPERIENCE ===== -->
+<section id="experience" class="section">
+  <div class="container">
+    <h2 class="section-title">Work <span>Experience</span></h2>
+    <p class="section-subtitle">My professional journey</p>
+    <div class="timeline">
+      <div class="timeline-item" *ngFor="let e of experience">
+        <div class="timeline-dot"></div>
+        <div class="timeline-content card">
+          <div class="exp-header">
+            <div>
+              <h3>{{ e.role }}</h3>
+              <p class="exp-company">{{ e.company }}</p>
+            </div>
+            <div class="exp-duration">
+              <span>{{ e.startDate }}</span>
+              <span> – </span>
+              <span>{{ e.current ? 'Present' : e.endDate }}</span>
+            </div>
+          </div>
+          <p *ngIf="e.description" class="exp-desc">{{ e.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEEDBACK ===== -->
+<section id="feedback" class="section section-alt">
+  <div class="container">
+    <h2 class="section-title">Client <span>Feedback</span></h2>
+    <p class="section-subtitle">What people say about working with me, and leave your own feedback</p>
+
+    <div class="grid-3" *ngIf="feedback.length; else noFeedbackYet">
+      <div class="feedback-card card" *ngFor="let f of feedback">
+        <div class="stars">{{ getStars(f.rating) }}</div>
+        <p class="feedback-msg">"{{ f.message }}"</p>
+        <div class="feedback-author">
+          <div class="author-avatar">
+            <img *ngIf="f.avatar" [src]="'http://localhost:5000' + f.avatar" [alt]="f.clientName">
+            <span *ngIf="!f.avatar">{{ f.clientName[0] }}</span>
+          </div>
+          <div>
+            <strong>{{ f.clientName }}</strong>
+            <small *ngIf="f.clientRole || f.company">{{ f.clientRole }}<span *ngIf="f.company"> · {{ f.company
+                }}</span></small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #noFeedbackYet>
+      <div class="card empty-state">No feedback published yet. Be the first to share your experience.</div>
+    </ng-template>
+
+    <div class="feedback-form-wrap card">
+      <h3>Leave Feedback</h3>
+      <form class="contact-form" (submit)="submitFeedbackForm($event)">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="fb-name">Your Name</label>
+            <input id="fb-name" name="name" type="text" required placeholder="Enter your name">
+          </div>
+          <div class="form-group">
+            <label for="fb-rating">Rating</label>
+            <select id="fb-rating" name="rating" required>
+              <option value="" disabled selected>Select rating</option>
+              <option value="5">5 - Excellent</option>
+              <option value="4">4 - Very Good</option>
+              <option value="3">3 - Good</option>
+              <option value="2">2 - Fair</option>
+              <option value="1">1 - Poor</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="fb-message">Your Feedback</label>
+          <textarea id="fb-message" name="message" required placeholder="Share your feedback"></textarea>
+        </div>
+        <button class="btn btn-primary" type="submit">Send Feedback</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT ===== -->
+<section id="contact" class="section">
+  <div class="container">
+    <h2 class="section-title">Get In <span>Touch</span></h2>
+    <p class="section-subtitle">Let's work together — reach me here</p>
+    <div class="contact-grid" *ngIf="contact">
+      <a *ngIf="contact.email" [href]="'mailto:' + contact.email" class="contact-card card">
+        <span class="material-icons">email</span>
+        <div><strong>Email</strong><small>{{ contact.email }}</small></div>
+      </a>
+      <a *ngIf="contact.whatsapp" [href]="'https://wa.me/' + contact.whatsapp" target="_blank"
+        class="contact-card card">
+        <span class="material-icons">chat</span>
+        <div><strong>WhatsApp</strong><small>{{ contact.whatsapp }}</small></div>
+      </a>
+      <a *ngIf="contact.linkedin" [href]="contact.linkedin" target="_blank" class="contact-card card">
+        <span class="material-icons">person</span>
+        <div><strong>LinkedIn</strong><small>Connect with me</small></div>
+      </a>
+      <a *ngIf="contact.github" [href]="contact.github" target="_blank" class="contact-card card">
+        <span class="material-icons">code</span>
+        <div><strong>GitHub</strong><small>View my code</small></div>
+      </a>
+      <a *ngIf="contact.facebook" [href]="contact.facebook" target="_blank" class="contact-card card">
+        <span class="material-icons">thumb_up</span>
+        <div><strong>Facebook</strong><small>Follow me</small></div>
+      </a>
+    </div>
+
+    <div class="contact-bottom">
+      <div class="contact-form-wrap card">
+        <h3>Contact Us</h3>
+        <form class="contact-form" (submit)="submitContactForm($event)">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="ct-name">Full Name</label>
+              <input id="ct-name" name="name" type="text" required placeholder="Your name">
+            </div>
+            <div class="form-group">
+              <label for="ct-email">Email Address</label>
+              <input id="ct-email" name="email" type="email" required placeholder="you@example.com">
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="ct-subject">Subject</label>
+            <input id="ct-subject" name="subject" type="text" required placeholder="How can I help you?">
+          </div>
+          <div class="form-group">
+            <label for="ct-message">Message</label>
+            <textarea id="ct-message" name="message" required placeholder="Write your message here"></textarea>
+          </div>
+          <button class="btn btn-primary" type="submit">Send Message</button>
+        </form>
+      </div>
+
+      <aside class="resume-cta card">
+        <h3>Need My Resume?</h3>
+        <p>Download the latest version directly and review my full profile.</p>
+        <a [href]="resumeUrl" class="btn btn-primary" download>
+          <span class="material-icons">download</span> Download Resume
+        </a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-col footer-brand-col">
+        <a class="footer-brand" (click)="scrollTo('hero')">
+          <span class="brand-dot"></span>{{ about?.name || 'Portfolio' }}
+        </a>
+        <p class="footer-tagline">{{ about?.tagline || 'Building clean, scalable web solutions.' }}</p>
+        <div class="footer-socials" *ngIf="contact">
+          <a *ngIf="contact.github" [href]="contact.github" target="_blank" aria-label="GitHub" title="GitHub">
+            <span class="material-icons">code</span>
+          </a>
+          <a *ngIf="contact.linkedin" [href]="contact.linkedin" target="_blank" aria-label="LinkedIn" title="LinkedIn">
+            <span class="material-icons">business_center</span>
+          </a>
+          <a *ngIf="contact.whatsapp" [href]="'https://wa.me/' + contact.whatsapp" target="_blank" aria-label="WhatsApp" title="WhatsApp">
+            <span class="material-icons">chat</span>
+          </a>
+          <a *ngIf="contact.facebook" [href]="contact.facebook" target="_blank" aria-label="Facebook" title="Facebook">
+            <span class="material-icons">thumb_up</span>
+          </a>
+          <a *ngIf="contact.email" [href]="'mailto:' + contact.email" aria-label="Email" title="Email">
+            <span class="material-icons">email</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h5 class="footer-heading">Explore</h5>
+        <ul class="footer-links">
+          <li><a (click)="scrollTo('about')">About</a></li>
+          <li><a (click)="scrollTo('projects')">Projects</a></li>
+          <li><a (click)="scrollTo('skills')">Skills</a></li>
+          <li><a (click)="scrollTo('tools')">Tools</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5 class="footer-heading">More</h5>
+        <ul class="footer-links">
+          <li><a (click)="scrollTo('sdlc')">Process</a></li>
+          <li><a (click)="scrollTo('education')">Education</a></li>
+          <li><a (click)="scrollTo('experience')">Experience</a></li>
+          <li><a (click)="scrollTo('feedback')">Feedback</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h5 class="footer-heading">Get In Touch</h5>
+        <ul class="footer-links footer-contact">
+          <li *ngIf="contact?.email">
+            <span class="material-icons">email</span>
+            <a [href]="'mailto:' + contact?.email">{{ contact?.email }}</a>
+          </li>
+          <li *ngIf="about?.location">
+            <span class="material-icons">location_on</span>
+            <span>{{ about?.location }}</span>
+          </li>
+          <li>
+            <span class="material-icons">schedule</span>
+            <span>Open to opportunities</span>
+          </li>
+        </ul>
+        <a [href]="resumeUrl" class="btn btn-primary footer-cta" download>
+          <span class="material-icons">download</span> Resume
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="footer-copy">© {{ currentYear }} {{ about?.name || 'Portfolio' }}. All rights reserved.</p>
+      <div class="footer-meta">
+        <a (click)="scrollTo('hero')" class="footer-top-btn" title="Back to top">
+          <span class="material-icons">arrow_upward</span> Back to top
+        </a>
+        <a routerLink="/login" class="admin-link">Admin</a>
+      </div>
+    </div>
+  </div>
+</footer>

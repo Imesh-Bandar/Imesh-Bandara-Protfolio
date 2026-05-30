@@ -1,0 +1,76 @@
+<div class="admin-header">
+  <h2>Projects</h2>
+</div>
+
+<div class="alert alert-success" *ngIf="msg">{{ msg }}</div>
+<div class="alert alert-error"   *ngIf="error">{{ error }}</div>
+
+<div class="form-card">
+  <h4 style="margin-bottom:1.2rem">{{ editing ? 'Edit Project' : 'Add Project' }}</h4>
+
+  <div class="grid-2">
+    <div class="form-group">
+      <label>Title</label>
+      <input [(ngModel)]="form.title" placeholder="Project name">
+    </div>
+    <div class="form-group">
+      <label>Tech Stack <small>(comma separated)</small></label>
+      <input [(ngModel)]="form.techStackRaw" placeholder="Angular, Node.js, MongoDB">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Description</label>
+    <textarea [(ngModel)]="form.description" rows="3" placeholder="What does this project do?"></textarea>
+  </div>
+
+  <div class="grid-2">
+    <div class="form-group">
+      <label>GitHub URL</label>
+      <input [(ngModel)]="form.githubUrl" placeholder="https://github.com/...">
+    </div>
+    <div class="form-group">
+      <label>Live URL</label>
+      <input [(ngModel)]="form.liveUrl" placeholder="https://...">
+    </div>
+    <div class="form-group">
+      <label>Client Name</label>
+      <input [(ngModel)]="form.ownerName" placeholder="John Doe">
+    </div>
+    <div class="form-group">
+      <label>Client Email</label>
+      <input [(ngModel)]="form.ownerEmail" placeholder="client@email.com">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Project Image</label>
+    <input type="file" accept="image/*" (change)="onFile($event)">
+    <img *ngIf="imagePreview" [src]="imagePreview" class="thumb" alt="Preview">
+  </div>
+
+  <div style="display:flex;gap:.75rem">
+    <button class="btn btn-primary" (click)="save()" [disabled]="saving">{{ saving ? 'Saving...' : editing ? 'Update' : 'Add Project' }}</button>
+    <button class="btn btn-outline" *ngIf="editing" (click)="reset()">Cancel</button>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Title</th><th>Tech Stack</th><th>Client</th><th>Actions</th></tr></thead>
+    <tbody>
+      <tr *ngFor="let p of projects">
+        <td><strong>{{ p.title }}</strong></td>
+        <td><span class="tag" *ngFor="let t of p.techStack">{{ t }}</span></td>
+        <td>{{ p.ownerName || '—' }}</td>
+        <td>
+          <button class="btn btn-outline btn-sm" (click)="edit(p)" style="margin-right:.4rem">Edit</button>
+          <button class="btn btn-danger btn-sm" (click)="delete(p._id!)">Delete</button>
+        </td>
+      </tr>
+      <tr *ngIf="!projects.length"><td colspan="4" style="text-align:center;color:var(--text-muted)">No projects yet</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<style>.thumb { width:80px;height:60px;object-fit:cover;border-radius:4px;margin-top:.5rem;border:1px solid var(--border); }</style>

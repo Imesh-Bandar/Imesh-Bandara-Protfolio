@@ -1,0 +1,80 @@
+<div class="admin-header"><h2>Client Feedback</h2></div>
+
+<div class="alert alert-success" *ngIf="msg">{{ msg }}</div>
+<div class="alert alert-error"   *ngIf="error">{{ error }}</div>
+
+<div class="form-card">
+  <h4 style="margin-bottom:1.2rem">{{ editing ? 'Edit Feedback' : 'Add Feedback' }}</h4>
+
+  <div class="grid-2">
+    <div class="form-group">
+      <label>Client Name</label>
+      <input [(ngModel)]="form.clientName" placeholder="John Doe">
+    </div>
+    <div class="form-group">
+      <label>Role / Position</label>
+      <input [(ngModel)]="form.clientRole" placeholder="CTO">
+    </div>
+    <div class="form-group">
+      <label>Company</label>
+      <input [(ngModel)]="form.company" placeholder="Acme Corp">
+    </div>
+    <div class="form-group">
+      <label>Rating ({{ form.rating }}/5) &nbsp;<span class="stars">{{ stars(form.rating || 5) }}</span></label>
+      <input type="range" [(ngModel)]="form.rating" min="1" max="5" step="1" style="width:100%;accent-color:var(--warning)">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Message</label>
+    <textarea [(ngModel)]="form.message" rows="4" placeholder="What did the client say?"></textarea>
+  </div>
+
+  <div class="form-group" style="flex-direction:row;align-items:center;gap:.75rem">
+    <input type="checkbox" [(ngModel)]="form.approved" id="approved" style="width:auto">
+    <label for="approved" style="color:var(--text);font-size:.95rem;margin:0">Approved (visible on portfolio)</label>
+  </div>
+
+  <div class="form-group">
+    <label>Avatar Photo</label>
+    <input type="file" accept="image/*" (change)="onFile($event)">
+    <img *ngIf="avatarPreview" [src]="avatarPreview" class="avatar-prev" alt="Preview">
+  </div>
+
+  <div style="display:flex;gap:.75rem">
+    <button class="btn btn-primary" (click)="save()" [disabled]="saving">{{ saving ? 'Saving...' : editing ? 'Update' : 'Add Feedback' }}</button>
+    <button class="btn btn-outline" *ngIf="editing" (click)="reset()">Cancel</button>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Client</th><th>Rating</th><th>Message</th><th>Approved</th><th>Actions</th></tr></thead>
+    <tbody>
+      <tr *ngFor="let f of feedbacks">
+        <td>
+          <strong>{{ f.clientName }}</strong>
+          <div *ngIf="f.company"><small style="color:var(--text-muted)">{{ f.company }}</small></div>
+        </td>
+        <td style="color:var(--warning)">{{ stars(f.rating) }}</td>
+        <td style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">"{{ f.message }}"</td>
+        <td>
+          <span class="badge" [class.badge-ok]="f.approved" [class.badge-warn]="!f.approved">
+            {{ f.approved ? 'Yes' : 'Hidden' }}
+          </span>
+        </td>
+        <td>
+          <button class="btn btn-outline btn-sm" (click)="edit(f)" style="margin-right:.4rem">Edit</button>
+          <button class="btn btn-danger btn-sm" (click)="delete(f._id!)">Delete</button>
+        </td>
+      </tr>
+      <tr *ngIf="!feedbacks.length"><td colspan="5" style="text-align:center;color:var(--text-muted)">No feedback yet</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<style>
+.avatar-prev { width:56px;height:56px;border-radius:50%;object-fit:cover;margin-top:.5rem;border:2px solid var(--border); }
+.badge-ok   { background:rgba(16,185,129,.12);color:var(--success);border-color:var(--success); }
+.badge-warn { background:rgba(245,158,11,.12);color:var(--warning);border-color:var(--warning); }
+</style>

@@ -1,0 +1,29 @@
+<div class="admin-header"><h2>Resume</h2></div>
+
+<div class="alert alert-success" *ngIf="msg">{{ msg }}</div>
+<div class="alert alert-error"   *ngIf="error">{{ error }}</div>
+
+<div class="form-card">
+  <p style="color:var(--text-muted);margin-bottom:1.5rem">
+    Upload your latest CV/resume PDF. Visitors can download it directly from the portfolio.
+  </p>
+
+  <div class="form-group">
+    <label>Select Resume File <small>(PDF recommended)</small></label>
+    <input type="file" accept=".pdf,.doc,.docx" (change)="onFile($event)">
+    <small *ngIf="resumeFile" style="color:var(--success);margin-top:.4rem">
+      Selected: {{ resumeFile.name }}
+    </small>
+  </div>
+
+  <div style="display:flex;gap:1rem;align-items:center;flex-wrap:wrap">
+    <button class="btn btn-primary" (click)="upload()" [disabled]="saving || !resumeFile">
+      <span class="material-icons" style="font-size:1rem">upload</span>
+      {{ saving ? 'Uploading...' : 'Upload Resume' }}
+    </button>
+    <a [href]="downloadUrl" class="btn btn-outline" download>
+      <span class="material-icons" style="font-size:1rem">download</span>
+      Download Current
+    </a>
+  </div>
+</div>

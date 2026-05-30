@@ -1,0 +1,42 @@
+<div class="admin-header"><h2>Tools</h2></div>
+
+<div class="alert alert-success" *ngIf="msg">{{ msg }}</div>
+<div class="alert alert-error"   *ngIf="error">{{ error }}</div>
+
+<div class="form-card">
+  <h4 style="margin-bottom:1.2rem">{{ editing ? 'Edit Tool' : 'Add Tool' }}</h4>
+  <div class="form-group">
+    <label>Tool Name</label>
+    <input [(ngModel)]="form.name" placeholder="e.g. VS Code">
+  </div>
+  <div class="form-group">
+    <label>Logo/Icon URL</label>
+    <input [(ngModel)]="form.icon" placeholder="e.g. https://example.com/logo.png">
+  </div>
+  <div style="display:flex;gap:.75rem">
+    <button class="btn btn-primary" (click)="save()" [disabled]="saving">{{ saving ? 'Saving...' : editing ? 'Update' : 'Add Tool' }}</button>
+    <button class="btn btn-outline" *ngIf="editing" (click)="reset()">Cancel</button>
+  </div>
+</div>
+
+<div class="tools-chips">
+  <div class="tool-chip-admin card" *ngFor="let t of tools">
+    <div class="tool-logo-admin" *ngIf="t.icon">
+      <img [src]="t.icon" [alt]="t.name" class="tool-img-admin">
+    </div>
+    <span class="material-icons" style="color:var(--accent);font-size:1.1rem" *ngIf="!t.icon">build</span>
+    <span style="flex:1">{{ t.name }}</span>
+    <div style="display:flex;gap:.4rem">
+      <button class="btn btn-outline btn-sm" (click)="edit(t)">Edit</button>
+      <button class="btn btn-danger btn-sm" (click)="delete(t._id!)">✕</button>
+    </div>
+  </div>
+  <p *ngIf="!tools.length" style="color:var(--ink-soft)">No tools yet.</p>
+</div>
+
+<style>
+.tools-chips { display:flex;flex-direction:column;gap:.6rem; }
+.tool-chip-admin { display:flex;align-items:center;gap:.75rem;padding:.75rem 1rem; }
+.tool-logo-admin { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.tool-img-admin { width: 100%; height: 100%; object-fit: contain; }
+</style>

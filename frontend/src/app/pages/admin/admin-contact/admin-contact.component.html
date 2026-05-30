@@ -1,0 +1,30 @@
+<div class="admin-header"><h2>Contact Info</h2></div>
+
+<div class="alert alert-success" *ngIf="msg">{{ msg }}</div>
+<div class="alert alert-error"   *ngIf="error">{{ error }}</div>
+
+<div class="form-card">
+  <div class="form-group">
+    <label>Email Address</label>
+    <input type="email" [(ngModel)]="form.email" placeholder="you@email.com">
+  </div>
+  <div class="form-group">
+    <label>WhatsApp Number <small>(with country code, e.g. 94771234567)</small></label>
+    <input [(ngModel)]="form.whatsapp" placeholder="94771234567">
+  </div>
+  <div class="form-group">
+    <label>LinkedIn URL</label>
+    <input [(ngModel)]="form.linkedin" placeholder="https://linkedin.com/in/yourname">
+  </div>
+  <div class="form-group">
+    <label>GitHub URL</label>
+    <input [(ngModel)]="form.github" placeholder="https://github.com/yourname">
+  </div>
+  <div class="form-group">
+    <label>Facebook URL</label>
+    <input [(ngModel)]="form.facebook" placeholder="https://facebook.com/yourname">
+  </div>
+  <button class="btn btn-primary" (click)="save()" [disabled]="saving">
+    {{ saving ? 'Saving...' : 'Save Contact Info' }}
+  </button>
+</div>

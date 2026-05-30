@@ -1,0 +1,68 @@
+<div class="admin-header"><h2>Development Process (SDLC)</h2></div>
+
+<div class="alert alert-success" *ngIf="msg">{{ msg }}</div>
+<div class="alert alert-error"   *ngIf="error">{{ error }}</div>
+
+<div class="form-card">
+  <h4 style="margin-bottom:1.2rem">{{ editing ? 'Edit Phase' : 'Add Phase' }}</h4>
+
+  <div class="grid-2">
+    <div class="form-group">
+      <label>Phase Number <small>(e.g. 01)</small></label>
+      <input [(ngModel)]="form.phase" placeholder="01">
+    </div>
+    <div class="form-group">
+      <label>Title</label>
+      <input [(ngModel)]="form.title" placeholder="Requirement Analysis">
+    </div>
+  </div>
+
+  <div class="form-group">
+    <label>Description</label>
+    <textarea [(ngModel)]="form.description" rows="3" placeholder="Describe this phase..."></textarea>
+  </div>
+
+  <div class="form-group">
+    <label>Material Icon Name</label>
+    <div class="icon-picker">
+      <div class="icon-opt" *ngFor="let ic of icons"
+           [class.selected]="form.icon === ic"
+           (click)="form.icon = ic" title="{{ ic }}">
+        <span class="material-icons">{{ ic }}</span>
+      </div>
+    </div>
+    <input [(ngModel)]="form.icon" placeholder="or type icon name" style="margin-top:.5rem">
+  </div>
+
+  <div style="display:flex;gap:.75rem">
+    <button class="btn btn-primary" (click)="save()" [disabled]="saving">{{ saving ? 'Saving...' : editing ? 'Update' : 'Add Phase' }}</button>
+    <button class="btn btn-outline" *ngIf="editing" (click)="reset()">Cancel</button>
+  </div>
+</div>
+
+<div class="phases-list">
+  <div class="phase-row card" *ngFor="let p of phases">
+    <div class="phase-num">{{ p.phase }}</div>
+    <span class="material-icons phase-icon">{{ p.icon || 'circle' }}</span>
+    <div class="phase-info">
+      <strong>{{ p.title }}</strong>
+      <p>{{ p.description }}</p>
+    </div>
+    <div class="phase-actions">
+      <button class="btn btn-outline btn-sm" (click)="edit(p)">Edit</button>
+      <button class="btn btn-danger btn-sm" (click)="delete(p._id!)">Delete</button>
+    </div>
+  </div>
+  <p *ngIf="!phases.length" style="color:var(--text-muted)">No phases yet.</p>
+</div>
+
+<style>
+.icon-picker { display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:.25rem; }
+.icon-opt { width:40px;height:40px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s; .material-icons { font-size:1.2rem;color:var(--text-muted); } &:hover,.selected { border-color:var(--primary);background:rgba(37,99,235,.1); .material-icons { color:var(--primary); } } }
+.phases-list { display:flex;flex-direction:column;gap:.75rem; }
+.phase-row { display:flex;align-items:flex-start;gap:1rem; }
+.phase-num { background:var(--primary);color:#fff;font-size:.7rem;font-weight:700;padding:.2rem .5rem;border-radius:20px;flex-shrink:0;margin-top:.15rem; }
+.phase-icon { color:var(--accent);flex-shrink:0; }
+.phase-info { flex:1; strong { display:block;margin-bottom:.25rem; } p { color:var(--text-muted);font-size:.85rem;margin:0; } }
+.phase-actions { display:flex;gap:.4rem;flex-shrink:0; }
+</style>

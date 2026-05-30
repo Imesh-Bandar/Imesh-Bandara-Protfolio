@@ -1,0 +1,60 @@
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar" [class.open]="sidebarOpen">
+    <div class="sidebar-header">
+      <span class="brand"><span class="dot"></span>Admin</span>
+      <button class="close-btn" (click)="sidebarOpen = false">✕</button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a *ngFor="let item of navItems"
+         [routerLink]="item.path"
+         routerLinkActive="active"
+         class="nav-item"
+         (click)="sidebarOpen = false">
+        <span class="material-icons">{{ item.icon }}</span>
+        {{ item.label }}
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="/" target="_blank" class="nav-item">
+        <span class="material-icons">open_in_new</span> View Portfolio
+      </a>
+      <button class="nav-item logout-btn" (click)="logout()">
+        <span class="material-icons">logout</span> Logout
+      </button>
+    </div>
+  </aside>
+
+  <!-- Overlay -->
+  <div class="overlay" *ngIf="sidebarOpen" (click)="sidebarOpen = false"></div>
+
+  <!-- Main -->
+  <div class="admin-main">
+    <header class="admin-topbar">
+      <button class="menu-btn" (click)="sidebarOpen = true">
+        <span class="material-icons">menu</span>
+      </button>
+      <span class="topbar-title">Portfolio Admin</span>
+    </header>
+    <div class="admin-content">
+      <router-outlet />
+    </div>
+  </div>
+
+  <!-- Toast notifications -->
+  <div class="toast-container">
+    <div *ngFor="let t of toast.toasts()"
+         class="toast"
+         [class.toast-success]="t.type === 'success'"
+         [class.toast-error]="t.type === 'error'"
+         [class.toast-info]="t.type === 'info'"
+         (click)="toast.dismiss(t.id)">
+      <span class="material-icons">
+        {{ t.type === 'success' ? 'check_circle' : t.type === 'error' ? 'error' : 'info' }}
+      </span>
+      <span>{{ t.text }}</span>
+    </div>
+  </div>
+</div>

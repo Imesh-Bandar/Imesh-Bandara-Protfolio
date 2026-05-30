@@ -1,0 +1,129 @@
+.admin-layout {
+  display: flex; min-height: 100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 240px; flex-shrink: 0;
+  background: var(--dark-2);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; bottom: 0; z-index: 50;
+  transition: transform var(--transition);
+
+  @media (max-width: 900px) {
+    transform: translateX(-100%);
+    &.open { transform: translateX(0); }
+  }
+}
+
+.sidebar-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid var(--border);
+  .brand { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; font-size: 1rem; color: var(--white); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary); }
+  .close-btn { display: none; background: none; border: none; color: var(--text-muted); font-size: 1rem; cursor: pointer;
+    @media (max-width: 900px) { display: block; }
+  }
+}
+
+.sidebar-nav {
+  flex: 1; padding: 1rem 0; overflow-y: auto;
+}
+
+.nav-item {
+  display: flex; align-items: center; gap: 0.75rem;
+  padding: 0.7rem 1.25rem;
+  color: var(--text-muted); font-size: 0.9rem;
+  cursor: pointer; transition: all var(--transition);
+  border: none; background: none; width: 100%; text-align: left;
+  text-decoration: none;
+  .material-icons { font-size: 1.1rem; }
+  &:hover { color: var(--white); background: rgba(255,255,255,0.04); }
+  &.active { color: var(--white); background: rgba(37,99,235,0.15); border-right: 2px solid var(--primary); }
+}
+
+.sidebar-footer {
+  border-top: 1px solid var(--border); padding: 0.75rem 0;
+  .logout-btn { color: var(--danger); &:hover { background: rgba(239,68,68,0.08); } }
+}
+
+/* ===== OVERLAY ===== */
+.overlay {
+  display: none;
+  @media (max-width: 900px) {
+    display: block; position: fixed; inset: 0; z-index: 40;
+    background: rgba(0,0,0,0.5);
+  }
+}
+
+/* ===== MAIN ===== */
+.admin-main {
+  flex: 1; margin-left: 240px; display: flex; flex-direction: column;
+  @media (max-width: 900px) { margin-left: 0; }
+}
+
+.admin-topbar {
+  position: sticky; top: 0; z-index: 10;
+  background: var(--dark-2); border-bottom: 1px solid var(--border);
+  padding: 0 1.5rem; height: 56px;
+  display: flex; align-items: center; gap: 1rem;
+  transition: background var(--transition), border-color var(--transition);
+  .menu-btn { display: none; background: none; border: none; color: var(--text-muted); cursor: pointer;
+    .material-icons { font-size: 1.4rem; }
+    @media (max-width: 900px) { display: flex; }
+  }
+  .topbar-title { font-weight: 600; font-size: 0.95rem; color: var(--text-muted); }
+}
+
+html[data-theme="dark"] .admin-topbar,
+body[data-theme="dark"] .admin-topbar {
+  background: rgba(2, 6, 23, 0.96);
+  border-bottom-color: rgba(148, 163, 184, 0.24);
+
+  .topbar-title {
+    color: #cbd5e1;
+  }
+
+  .menu-btn {
+    color: #e2e8f0;
+  }
+}
+
+.admin-content { padding: 2rem 1.5rem; max-width: 900px; }
+
+/* ===== TOAST ===== */
+.toast-container {
+  position: fixed; top: 1rem; right: 1rem; z-index: 9999;
+  display: flex; flex-direction: column; gap: 0.6rem;
+  pointer-events: none;
+}
+.toast {
+  pointer-events: auto;
+  min-width: 280px; max-width: 420px;
+  display: flex; align-items: center; gap: 0.7rem;
+  padding: 0.9rem 1.2rem;
+  border-radius: 10px;
+  background: #1e293b; color: #fff;
+  border-left: 4px solid #64748b;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+  font-size: 0.92rem; font-weight: 500;
+  cursor: pointer;
+  animation: toast-in 0.25s ease-out;
+  .material-icons { font-size: 1.3rem; }
+}
+.toast-success { border-left-color: #10b981; .material-icons { color: #10b981; } }
+.toast-error   { border-left-color: #ef4444; .material-icons { color: #ef4444; } }
+.toast-info    { border-left-color: #3b82f6; .material-icons { color: #3b82f6; } }
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translateX(20px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* Shared admin section styles — used by child components */
+:host ::ng-deep {
+  .admin-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; h2 { font-size: 1.4rem; } }
+  .form-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.5rem; }
+}

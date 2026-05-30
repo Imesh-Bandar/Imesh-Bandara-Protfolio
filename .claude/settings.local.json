@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx ng *)",
+      "Bash(start http://localhost:4200)",
+      "Bash(netstat -ano)",
+      "Bash(findstr :4200)",
+      "Bash(findstr :5000)",
+      "Bash(curl -s http://localhost:5000/api/about)",
+      "Bash(curl -s http://localhost:5000/api/projects)",
+      "Bash(curl -s http://localhost:4200)",
+      "Bash(pkill -f \"node.*backend\")",
+      "Bash(npm start *)",
+      "Bash(pkill -f \"ng serve\\\\|npm start\")",
+      "Bash(curl -I http://localhost:4200)",
+      "Bash(curl -I http://localhost:5000/api/about)",
+      "Bash(curl -s http://localhost:4200/)"
+    ]
+  }
+}

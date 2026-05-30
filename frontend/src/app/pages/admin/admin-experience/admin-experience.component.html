@@ -1,0 +1,60 @@
+<div class="admin-header"><h2>Work Experience</h2></div>
+
+<div class="alert alert-success" *ngIf="msg">{{ msg }}</div>
+<div class="alert alert-error"   *ngIf="error">{{ error }}</div>
+
+<div class="form-card">
+  <h4 style="margin-bottom:1.2rem">{{ editing ? 'Edit Experience' : 'Add Experience' }}</h4>
+
+  <div class="grid-2">
+    <div class="form-group">
+      <label>Company</label>
+      <input [(ngModel)]="form.company" placeholder="Synergy Information Systems">
+    </div>
+    <div class="form-group">
+      <label>Role</label>
+      <input [(ngModel)]="form.role" placeholder="Full Stack Software Engineer">
+    </div>
+    <div class="form-group">
+      <label>Start Date</label>
+      <input type="month" [(ngModel)]="form.startDate">
+    </div>
+    <div class="form-group" *ngIf="!form.current">
+      <label>End Date</label>
+      <input type="month" [(ngModel)]="form.endDate">
+    </div>
+  </div>
+
+  <div class="form-group" style="flex-direction:row;align-items:center;gap:.75rem">
+    <input type="checkbox" [(ngModel)]="form.current" id="current" style="width:auto">
+    <label for="current" style="color:var(--text);font-size:.95rem;margin:0">Currently working here</label>
+  </div>
+
+  <div class="form-group">
+    <label>Description</label>
+    <textarea [(ngModel)]="form.description" rows="4" placeholder="Describe your role and responsibilities..."></textarea>
+  </div>
+
+  <div style="display:flex;gap:.75rem">
+    <button class="btn btn-primary" (click)="save()" [disabled]="saving">{{ saving ? 'Saving...' : editing ? 'Update' : 'Add Experience' }}</button>
+    <button class="btn btn-outline" *ngIf="editing" (click)="reset()">Cancel</button>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Company</th><th>Role</th><th>Duration</th><th>Actions</th></tr></thead>
+    <tbody>
+      <tr *ngFor="let e of experience">
+        <td><strong>{{ e.company }}</strong></td>
+        <td>{{ e.role }}</td>
+        <td>{{ e.startDate }} – {{ e.current ? 'Present' : e.endDate }}</td>
+        <td>
+          <button class="btn btn-outline btn-sm" (click)="edit(e)" style="margin-right:.4rem">Edit</button>
+          <button class="btn btn-danger btn-sm" (click)="delete(e._id!)">Delete</button>
+        </td>
+      </tr>
+      <tr *ngIf="!experience.length"><td colspan="4" style="text-align:center;color:var(--text-muted)">No experience yet</td></tr>
+    </tbody>
+  </table>
+</div>

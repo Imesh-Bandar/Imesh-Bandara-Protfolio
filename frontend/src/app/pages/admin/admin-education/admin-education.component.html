@@ -1,0 +1,75 @@
+<div class="admin-header"><h2>Education</h2></div>
+
+<div class="alert alert-success" *ngIf="msg">{{ msg }}</div>
+<div class="alert alert-error"   *ngIf="error">{{ error }}</div>
+
+<div class="form-card">
+  <h4 style="margin-bottom:1.2rem">{{ editing ? 'Edit Entry' : 'Add Entry' }}</h4>
+
+  <div class="grid-2">
+    <div class="form-group">
+      <label>Type</label>
+      <select [(ngModel)]="form.type">
+        <option value="degree">Degree</option>
+        <option value="diploma">Diploma</option>
+        <option value="certification">Certification</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Status</label>
+      <select [(ngModel)]="form.status">
+        <option value="completed">Completed</option>
+        <option value="in-progress">In Progress</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Title</label>
+      <input [(ngModel)]="form.title" placeholder="e.g. BSc Hons Information Technology">
+    </div>
+    <div class="form-group">
+      <label>Institution</label>
+      <input [(ngModel)]="form.institution" placeholder="e.g. ICBT">
+    </div>
+    <div class="form-group">
+      <label>Grade <small>(optional)</small></label>
+      <input [(ngModel)]="form.grade" placeholder="e.g. A Pass">
+    </div>
+    <div class="form-group">
+      <label>Start Date <small>(optional)</small></label>
+      <input type="date" [(ngModel)]="form.startDate">
+    </div>
+    <div class="form-group">
+      <label>End Date <small>(optional)</small></label>
+      <input type="date" [(ngModel)]="form.endDate">
+    </div>
+  </div>
+
+  <div style="display:flex;gap:.75rem">
+    <button class="btn btn-primary" (click)="save()" [disabled]="saving">{{ saving ? 'Saving...' : editing ? 'Update' : 'Add Entry' }}</button>
+    <button class="btn btn-outline" *ngIf="editing" (click)="reset()">Cancel</button>
+  </div>
+</div>
+
+<div class="table-wrap">
+  <table>
+    <thead><tr><th>Type</th><th>Title</th><th>Institution</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+      <tr *ngFor="let e of education">
+        <td><span class="badge">{{ typeLabel(e.type) }}</span></td>
+        <td>{{ e.title }}</td>
+        <td>{{ e.institution }}</td>
+        <td><span [class]="'badge ' + (e.status === 'in-progress' ? 'badge-warn' : 'badge-ok')">{{ e.status === 'in-progress' ? 'In Progress' : 'Completed' }}</span></td>
+        <td>
+          <button class="btn btn-outline btn-sm" (click)="edit(e)" style="margin-right:.4rem">Edit</button>
+          <button class="btn btn-danger btn-sm" (click)="delete(e._id!)">Delete</button>
+        </td>
+      </tr>
+      <tr *ngIf="!education.length"><td colspan="5" style="text-align:center;color:var(--text-muted)">No entries yet</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<style>
+.badge-ok   { background:rgba(16,185,129,.12);color:var(--success);border-color:var(--success); }
+.badge-warn { background:rgba(245,158,11,.12);color:var(--warning);border-color:var(--warning); }
+</style>
