@@ -61,4 +61,25 @@ router.delete('/:id', auth, async (req, res) => {
   res.json({ message: 'Deleted' });
 });
 
+/**
+ * PUT /reorder
+ * Body: { ids: ["id1","id2","id3"...] } — array of project ids in the
+ * desired display order. Sets order=index for each.
+ */
+router.put('/reorder/bulk', auth, async (req, res) => {
+  try {
+    const ids = Array.isArray(req.body.ids) ? req.body.ids : [];
+    if (!ids.length) return res.status(400).json({ message: 'ids array required' });
+    const ops = ids.map((id, i) => ({
+      updateOne: { filter: { _id: id }, update: { $set: { order: i } } }
+    }));
+    await Project.bulkWrite(ops);
+    const projects = await Project.find().sort({ order: 1, createdAt: -1 });
+    res.json(projects);
+  } catch (e) {
+    console.error('PUT /projects/reorder error:', e);
+    res.status(400).json({ message: e.message });
+  }
+});
+
 module.exports = router;

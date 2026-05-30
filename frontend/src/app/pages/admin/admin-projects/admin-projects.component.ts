@@ -59,4 +59,46 @@ export class AdminProjectsComponent implements OnInit {
       error: () => this.toast.error('Delete failed')
     });
   }
+
+  /* ===== Drag & Drop reordering ===== */
+  dragIndex: number | null = null;
+  dragOverIndex: number | null = null;
+  private orderDirty = false;
+
+  onDragStart(i: number, ev: DragEvent) {
+    this.dragIndex = i;
+    if (ev.dataTransfer) {
+      ev.dataTransfer.effectAllowed = 'move';
+      ev.dataTransfer.setData('text/plain', String(i));
+    }
+  }
+  onDragOver(i: number, ev: DragEvent) {
+    ev.preventDefault();
+    if (ev.dataTransfer) ev.dataTransfer.dropEffect = 'move';
+    this.dragOverIndex = i;
+  }
+  onDragLeave() { this.dragOverIndex = null; }
+
+  onDrop(i: number, ev: DragEvent) {
+    ev.preventDefault();
+    const from = this.dragIndex;
+    this.dragOverIndex = null;
+    this.dragIndex = null;
+    if (from === null || from === i) return;
+    const arr = [...this.projects];
+    const [moved] = arr.splice(from, 1);
+    arr.splice(i, 0, moved);
+    this.projects = arr;
+    this.orderDirty = true;
+    this.saveOrder();
+  }
+
+  private saveOrder() {
+    if (!this.orderDirty) return;
+    const ids = this.projects.map(p => p._id!).filter(Boolean);
+    this.api.reorderProjects(ids).subscribe({
+      next: list => { this.projects = list; this.orderDirty = false; this.toast.success('Project order saved'); },
+      error: () => { this.toast.error('Could not save order — reverted'); this.load(); }
+    });
+  }
 }

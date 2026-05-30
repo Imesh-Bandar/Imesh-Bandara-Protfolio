@@ -55,11 +55,37 @@
   </div>
 </div>
 
+<p class="reorder-hint" *ngIf="projects.length > 1">
+  <span class="material-icons">drag_indicator</span>
+  Drag rows by the handle to reorder how projects appear on the portfolio.
+</p>
+
 <div class="table-wrap">
-  <table>
-    <thead><tr><th>Title</th><th>Tech Stack</th><th>Client</th><th>Actions</th></tr></thead>
+  <table class="dnd-table">
+    <thead>
+      <tr>
+        <th class="dnd-handle-col"></th>
+        <th>Title</th>
+        <th>Tech Stack</th>
+        <th>Client</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
     <tbody>
-      <tr *ngFor="let p of projects">
+      <tr *ngFor="let p of projects; let i = index"
+          class="dnd-row"
+          [class.dnd-dragging]="dragIndex === i"
+          [class.dnd-over]="dragOverIndex === i && dragIndex !== i"
+          draggable="true"
+          (dragstart)="onDragStart(i, $event)"
+          (dragover)="onDragOver(i, $event)"
+          (dragleave)="onDragLeave()"
+          (drop)="onDrop(i, $event)">
+        <td class="dnd-handle-cell">
+          <span class="dnd-handle" title="Drag to reorder">
+            <span class="material-icons">drag_indicator</span>
+          </span>
+        </td>
         <td><strong>{{ p.title }}</strong></td>
         <td><span class="tag" *ngFor="let t of p.techStack">{{ t }}</span></td>
         <td>{{ p.ownerName || '—' }}</td>
@@ -68,9 +94,52 @@
           <button class="btn btn-danger btn-sm" (click)="delete(p._id!)">Delete</button>
         </td>
       </tr>
-      <tr *ngIf="!projects.length"><td colspan="4" style="text-align:center;color:var(--text-muted)">No projects yet</td></tr>
+      <tr *ngIf="!projects.length"><td colspan="5" style="text-align:center;color:var(--text-muted)">No projects yet</td></tr>
     </tbody>
   </table>
 </div>
 
-<style>.thumb { width:80px;height:60px;object-fit:cover;border-radius:4px;margin-top:.5rem;border:1px solid var(--border); }</style>
+<style>
+  .thumb { width:80px;height:60px;object-fit:cover;border-radius:4px;margin-top:.5rem;border:1px solid var(--border); }
+
+  .reorder-hint {
+    display: inline-flex; align-items: center; gap: .4rem;
+    padding: .5rem .85rem;
+    background: var(--accent-soft);
+    color: var(--ink-soft);
+    border-radius: 100px;
+    font-size: .82rem;
+    margin: .6rem 0 1rem;
+    .material-icons { font-size: 1.05rem; color: var(--accent); }
+  }
+
+  /* ===== Drag & drop table styling ===== */
+  .dnd-handle-col { width: 36px; }
+  .dnd-row {
+    cursor: grab;
+    transition: background 0.18s ease, transform 0.18s ease, box-shadow 0.18s ease;
+    user-select: none;
+  }
+  .dnd-row:active { cursor: grabbing; }
+  .dnd-row.dnd-dragging {
+    opacity: 0.55;
+    background: var(--accent-soft);
+  }
+  .dnd-row.dnd-over {
+    background: var(--accent-soft);
+    box-shadow: inset 0 3px 0 var(--accent);
+  }
+  .dnd-handle-cell { padding-right: 0 !important; }
+  .dnd-handle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 28px; height: 28px;
+    border-radius: 6px;
+    color: var(--ink-soft);
+    transition: all .18s ease;
+    .material-icons { font-size: 1.15rem; }
+  }
+  .dnd-row:hover .dnd-handle {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+</style>

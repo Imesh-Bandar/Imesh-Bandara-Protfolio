@@ -17,6 +17,7 @@ export class ApiService {
   createProject(fd: FormData) { return this.http.post<Project>(`${BASE}/projects`, fd); }
   updateProject(id: string, fd: FormData) { return this.http.put<Project>(`${BASE}/projects/${id}`, fd); }
   deleteProject(id: string)  { return this.http.delete(`${BASE}/projects/${id}`); }
+  reorderProjects(ids: string[]) { return this.http.put<Project[]>(`${BASE}/projects/reorder/bulk`, { ids }); }
 
   // Skills
   getSkills()        { return this.http.get<Skill[]>(`${BASE}/skills`); }

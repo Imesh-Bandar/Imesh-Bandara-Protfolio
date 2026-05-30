@@ -414,15 +414,65 @@ html[data-theme="dark"] .navbar {
   background: var(--paper-card);
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  padding: 2.2rem;
+  padding: 0;                     /* image hugs the top edge */
+  overflow: hidden;
   transition: transform var(--transition), box-shadow var(--transition);
+  display: flex;
+  flex-direction: column;
   &:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
 
+  /* ===== Project image — fixed aspect ratio + uniform height ===== */
+  .project-img,
+  .project-img-placeholder {
+    width: 100%;
+    aspect-ratio: 16 / 9;        /* keeps every card image the same shape */
+    height: 240px;               /* fallback for older browsers */
+    overflow: hidden;
+    position: relative;
+    background: var(--accent-soft);
+    border-bottom: 1px solid var(--line);
+  }
+  /* Modern browsers — use aspect-ratio instead of fixed height so cards
+     scale fluidly on different viewports. */
+  @supports (aspect-ratio: 16 / 9) {
+    .project-img,
+    .project-img-placeholder { height: auto; }
+  }
+
+  .project-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;            /* fills the box, crops overflow */
+    object-position: center;
+    display: block;
+    transition: transform 0.5s ease;
+  }
+  &:hover .project-img img { transform: scale(1.04); }
+
+  .project-img-placeholder {
+    display: flex; align-items: center; justify-content: center;
+    .material-icons { font-size: 3rem; color: var(--accent); opacity: 0.5; }
+  }
+
+  .project-body {
+    padding: 2rem 2.2rem 2.2rem;
+    display: flex; flex-direction: column;
+    flex: 1;
+  }
   .project-tag { font-size: 0.78rem; font-weight: 600; color: var(--accent); letter-spacing: 0.03em; text-transform: uppercase; }
   h3 { font-size: 1.5rem; margin: 14px 0 12px; }
   p { color: var(--ink-soft); font-size: 0.98rem; line-height: 1.7; }
   .project-tags { margin-top: 26px; display: flex; gap: 8px; flex-wrap: wrap; }
   .chip { font-size: 0.8rem; background: var(--accent-soft); color: var(--accent); padding: 6px 14px; border-radius: 100px; font-weight: 500; }
+
+  .project-links { margin-top: 1.2rem; display: flex; gap: 0.6rem; flex-wrap: wrap; }
+  .project-owner { margin-top: 1rem; padding-top: 1rem; border-top: 1px dashed var(--line); color: var(--ink-soft); font-size: 0.82rem; }
+}
+
+/* On smaller cards / mobile, scale the image height down */
+@media (max-width: 600px) {
+  .project-card .project-img,
+  .project-card .project-img-placeholder { height: 200px; }
 }
 
 @media (max-width: 900px) {

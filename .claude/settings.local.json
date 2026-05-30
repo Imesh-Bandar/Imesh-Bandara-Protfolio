@@ -19,7 +19,11 @@
       "Bash(git -C \"E:\\\\WEB DEVELOPMENT\\\\Full-Stack-Software-Engineer-Protfolio-Web\" checkout -b fix/projects-techstack-and-admin-clock)",
       "Bash(git -C \"E:\\\\WEB DEVELOPMENT\\\\Full-Stack-Software-Engineer-Protfolio-Web\" add backend/routes/projects.js frontend/src/app/pages/admin/admin-projects/admin-projects.component.ts frontend/src/app/pages/admin/dashboard/dashboard.component.html frontend/src/app/pages/admin/dashboard/dashboard.component.scss frontend/src/app/pages/admin/dashboard/dashboard.component.ts)",
       "Bash(git -C 'E:\\\\WEB DEVELOPMENT\\\\Full-Stack-Software-Engineer-Protfolio-Web' commit -m ' *)",
-      "Bash(gh pr create --base main --head fix/projects-techstack-and-admin-clock --title 'Fix Projects PUT JSON error + add live clock & admin identity in topbar' --body ' *)"
+      "Bash(gh pr create --base main --head fix/projects-techstack-and-admin-clock --title 'Fix Projects PUT JSON error + add live clock & admin identity in topbar' --body ' *)",
+      "Bash(git -C \"E:\\\\WEB DEVELOPMENT\\\\Full-Stack-Software-Engineer-Protfolio-Web\" log --oneline -3)",
+      "Bash(git -C \"E:\\\\WEB DEVELOPMENT\\\\Full-Stack-Software-Engineer-Protfolio-Web\" diff main..HEAD --stat)",
+      "Bash(git -C \"E:\\\\WEB DEVELOPMENT\\\\Full-Stack-Software-Engineer-Protfolio-Web\" checkout main)",
+      "Bash(git -C \"E:\\\\WEB DEVELOPMENT\\\\Full-Stack-Software-Engineer-Protfolio-Web\" branch -d feat/admin-theme-toggle)"
     ]
   }
 }
