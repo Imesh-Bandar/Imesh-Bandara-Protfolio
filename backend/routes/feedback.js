@@ -20,20 +20,29 @@ router.get('/all', auth, async (req, res) => {
   res.json(await Feedback.find().sort({ createdAt: -1 }));
 });
 
-router.post('/', auth, upload.single('avatar'), async (req, res) => {
+const pickAvatar = (req) => {
+  if (req.file) return req.file;
+  const files = Array.isArray(req.files) ? req.files : [];
+  return files.find(f => f.fieldname === 'avatar');
+};
+
+router.post('/', auth, upload.any(), async (req, res) => {
   try {
     const data = { ...req.body };
-    if (req.file) data.avatar = `/uploads/${req.file.filename}`;
+    const av = pickAvatar(req);
+    if (av) data.avatar = `/uploads/${av.filename}`;
     res.status(201).json(await Feedback.create(data));
   } catch (e) {
+    console.error('POST /feedback error:', e);
     res.status(400).json({ message: e.message });
   }
 });
 
-router.put('/:id', auth, upload.single('avatar'), async (req, res) => {
+router.put('/:id', auth, upload.any(), async (req, res) => {
   try {
     const { _id, createdAt, updatedAt, __v, ...data } = req.body;
-    if (req.file) data.avatar = `/uploads/${req.file.filename}`;
+    const av = pickAvatar(req);
+    if (av) data.avatar = `/uploads/${av.filename}`;
     const fb = await Feedback.findByIdAndUpdate(req.params.id, data, { new: true, runValidators: true });
     if (!fb) return res.status(404).json({ message: 'Feedback not found' });
     res.json(fb);

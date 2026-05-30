@@ -15,22 +15,38 @@ router.get('/', async (req, res) => {
   res.json(projects);
 });
 
-router.post('/', auth, upload.single('image'), async (req, res) => {
+const parseTechStack = (raw) => {
+  if (!raw) return [];
+  if (Array.isArray(raw)) return raw.flatMap(parseTechStack);
+  try { return JSON.parse(raw); }
+  catch { return String(raw).split(',').map(s => s.trim()).filter(Boolean); }
+};
+
+const pickImage = (req) => {
+  if (req.file) return req.file;
+  const files = Array.isArray(req.files) ? req.files : [];
+  return files.find(f => f.fieldname === 'image');
+};
+
+router.post('/', auth, upload.any(), async (req, res) => {
   try {
-    const data = { ...req.body, techStack: JSON.parse(req.body.techStack || '[]') };
-    if (req.file) data.image = `/uploads/${req.file.filename}`;
+    const data = { ...req.body, techStack: parseTechStack(req.body.techStack)};
+    const img = pickImage(req);
+    if (img) data.image = `/uploads/${img.filename}`;
     const project = await Project.create(data);
     res.status(201).json(project);
   } catch (e) {
+    console.error('POST /projects error:', e);
     res.status(400).json({ message: e.message });
   }
 });
 
-router.put('/:id', auth, upload.single('image'), async (req, res) => {
+router.put('/:id', auth, upload.any(), async (req, res) => {
   try {
     const { _id, createdAt, updatedAt, __v, ...rest } = req.body;
-    const data = { ...rest, techStack: JSON.parse(req.body.techStack || '[]') };
-    if (req.file) data.image = `/uploads/${req.file.filename}`;
+    const data = { ...rest, techStack: parseTechStack(req.body.techStack)};
+    const img = pickImage(req);
+    if (img) data.image = `/uploads/${img.filename}`;
     const project = await Project.findByIdAndUpdate(req.params.id, data, { new: true, runValidators: true });
     if (!project) return res.status(404).json({ message: 'Project not found' });
     res.json(project);

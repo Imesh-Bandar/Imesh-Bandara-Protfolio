@@ -1,0 +1,71 @@
+<aside class="todo-widget" [class.collapsed]="collapsed">
+  <button class="tw-collapse"
+          (click)="collapsed = !collapsed"
+          [title]="collapsed ? 'Expand tasks panel' : 'Collapse tasks panel'"
+          [attr.aria-label]="collapsed ? 'Expand tasks panel' : 'Collapse tasks panel'">
+    <span class="material-icons">{{ collapsed ? 'chevron_left' : 'chevron_right' }}</span>
+  </button>
+
+  <!-- Collapsed stub -->
+  <div class="tw-collapsed-stub" *ngIf="collapsed">
+    <span class="material-icons">checklist</span>
+    <span class="stub-count">{{ todoSvc.todayCounts().total }}</span>
+    <span class="stub-label">Tasks</span>
+  </div>
+
+  <div class="tw-inner" *ngIf="!collapsed">
+    <div class="tw-head">
+      <div class="tw-head-info">
+        <span class="material-icons">checklist</span>
+        <div>
+          <h4>Today's Tasks</h4>
+          <small>{{ todayLabel }}</small>
+        </div>
+      </div>
+      <a routerLink="/admin/calendar" class="tw-cal-link" title="Open full calendar">
+        <span class="material-icons">calendar_month</span>
+      </a>
+    </div>
+
+    <div class="tw-counts">
+      <span class="tw-count">
+        <strong>{{ todoSvc.todayCounts().total }}</strong> total
+      </span>
+      <span class="tw-count done">
+        <strong>{{ todoSvc.todayCounts().done }}</strong> done
+      </span>
+    </div>
+
+    <form class="tw-form" (submit)="$event.preventDefault(); add()">
+      <input class="tw-input" [(ngModel)]="newText" name="twText" placeholder="Add a task..." maxlength="120">
+      <div class="tw-form-row">
+        <button type="button" class="tw-prio low"  [class.active]="newPriority === 'low'"  (click)="newPriority = 'low'"  title="Low priority"><span class="dot"></span></button>
+        <button type="button" class="tw-prio med"  [class.active]="newPriority === 'med'"  (click)="newPriority = 'med'"  title="Medium priority"><span class="dot"></span></button>
+        <button type="button" class="tw-prio high" [class.active]="newPriority === 'high'" (click)="newPriority = 'high'" title="High priority"><span class="dot"></span></button>
+        <button type="submit" class="tw-add" title="Add task">
+          <span class="material-icons">add</span>
+        </button>
+      </div>
+    </form>
+
+    <ul class="tw-list" *ngIf="todoSvc.todaysList().length; else twEmpty">
+      <li *ngFor="let t of todoSvc.todaysList()" class="tw-item" [class.done]="t.done">
+        <button class="tw-check" (click)="toggle(t)">
+          <span class="material-icons">{{ t.done ? 'check_box' : 'check_box_outline_blank' }}</span>
+        </button>
+        <span class="tw-pdot" [class.low]="t.priority === 'low'" [class.med]="t.priority === 'med'" [class.high]="t.priority === 'high'"></span>
+        <span class="tw-text">{{ t.text }}</span>
+        <button class="tw-del" (click)="remove(t)" title="Delete">
+          <span class="material-icons">close</span>
+        </button>
+      </li>
+    </ul>
+
+    <ng-template #twEmpty>
+      <div class="tw-empty">
+        <span class="material-icons">task_alt</span>
+        <p>Nothing scheduled for today.</p>
+      </div>
+    </ng-template>
+  </div>
+</aside>

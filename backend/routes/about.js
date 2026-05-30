@@ -18,12 +18,18 @@ router.get('/', async (req, res) => {
   res.json(about);
 });
 
-router.post('/', auth, upload.fields([{ name: 'profileImage', maxCount: 1 }, { name: 'signature', maxCount: 1 }]), async (req, res) => {
+// Use .any() so unexpected file field names don't crash with
+// "MulterError: Unexpected field". We pick the named files manually below.
+router.post('/', auth, upload.any(), async (req, res) => {
   try {
     const { _id, createdAt, updatedAt, __v, ...rest } = req.body;
     const data = { ...rest };
-    if (req.files?.profileImage?.[0]) data.profileImage = `/uploads/${req.files.profileImage[0].filename}`;
-    if (req.files?.signature?.[0])    data.signature    = `/uploads/${req.files.signature[0].filename}`;
+    const files = Array.isArray(req.files) ? req.files : [];
+    const profile = files.find(f => f.fieldname === 'profileImage');
+    const sig     = files.find(f => f.fieldname === 'signature');
+    if (profile) data.profileImage = `/uploads/${profile.filename}`;
+    if (sig)     data.signature    = `/uploads/${sig.filename}`;
+
     const existing = await About.findOne().sort({ createdAt: -1 });
     let about;
     if (existing) {

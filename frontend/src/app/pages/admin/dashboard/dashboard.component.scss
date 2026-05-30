@@ -66,16 +66,114 @@
 
 .admin-topbar {
   position: sticky; top: 0; z-index: 10;
-  background: var(--dark-2); border-bottom: 1px solid var(--border);
-  padding: 0 1.5rem; height: 56px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--line);
+  padding: 0 1.5rem; height: 68px;
   display: flex; align-items: center; gap: 1rem;
-  transition: background var(--transition), border-color var(--transition);
+  transition: background var(--transition), border-color var(--transition), color var(--transition);
+  color: var(--ink);
   .menu-btn { display: none; background: none; border: none; color: var(--text-muted); cursor: pointer;
     .material-icons { font-size: 1.4rem; }
     @media (max-width: 900px) { display: flex; }
   }
-  .topbar-title { font-weight: 600; font-size: 0.95rem; color: var(--text-muted); }
+  .topbar-title { font-weight: 600; font-size: 0.95rem; color: var(--ink-soft); }
+  .menu-btn { color: var(--ink-soft) !important; }
+  .topbar-spacer { flex: 1; }
+
+  /* ===== Live Clock (matches site accent palette) ===== */
+  .topbar-clock {
+    display: flex; align-items: center; gap: 0.7rem;
+    padding: 0.5rem 1rem 0.5rem 0.85rem;
+    border-radius: 999px;
+    background: var(--accent);
+    box-shadow: 0 4px 14px -6px color-mix(in srgb, var(--accent) 60%, transparent),
+                inset 0 1px 0 rgba(255,255,255,0.15);
+    color: var(--paper);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 20% 0%, rgba(255,255,255,0.18), transparent 60%);
+      pointer-events: none;
+    }
+
+    .material-icons {
+      font-size: 1.1rem;
+      color: var(--paper);
+      animation: clock-pulse 2s ease-in-out infinite;
+      position: relative; z-index: 1;
+    }
+
+    .clock-stack {
+      display: flex; flex-direction: column; line-height: 1.1;
+      position: relative; z-index: 1;
+    }
+    .clock-time {
+      font-family: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
+      font-size: 0.95rem; font-weight: 700;
+      color: var(--paper);
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.03em;
+    }
+    .clock-date {
+      font-size: 0.7rem;
+      color: color-mix(in srgb, var(--paper) 80%, transparent);
+      letter-spacing: 0.06em;
+      font-weight: 500;
+      text-transform: uppercase;
+    }
+  }
+
+  /* ===== Admin Identity Pill (matches site accent palette) ===== */
+  .topbar-user {
+    display: flex; align-items: center; gap: 0.65rem;
+    padding: 0.3rem 0.95rem 0.3rem 0.35rem;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    border: 1px solid var(--line);
+    transition: background 0.2s ease, border-color 0.2s ease;
+    &:hover {
+      background: color-mix(in srgb, var(--accent) 18%, var(--paper));
+      border-color: var(--accent);
+    }
+    .user-avatar {
+      width: 34px; height: 34px;
+      border-radius: 50%;
+      background: var(--accent);
+      color: var(--paper);
+      display: grid; place-items: center;
+      font-weight: 800; font-size: 0.9rem;
+      box-shadow: 0 2px 8px -3px color-mix(in srgb, var(--accent) 60%, transparent);
+    }
+    .user-stack { display: flex; flex-direction: column; line-height: 1.1; }
+    .user-name {
+      font-size: 0.88rem; font-weight: 700;
+      color: var(--ink);
+    }
+    .user-role {
+      font-size: 0.68rem;
+      color: var(--ink-soft);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .topbar-clock .clock-date { display: none; }
+    .topbar-user .user-stack { display: none; }
+    .topbar-clock { padding: 0.45rem 0.85rem; }
+  }
 }
+
+@keyframes clock-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%      { opacity: 0.75; transform: scale(0.92); }
+}
+
 
 html[data-theme="dark"] .admin-topbar,
 body[data-theme="dark"] .admin-topbar {
@@ -91,7 +189,18 @@ body[data-theme="dark"] .admin-topbar {
   }
 }
 
-.admin-content { padding: 2rem 1.5rem; max-width: 900px; }
+.admin-content-wrap {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 2rem 1.5rem;
+}
+.admin-content {
+  flex: 1;
+  min-width: 0;
+  max-width: 900px;
+}
+.admin-todo-rail { display: block; }
 
 /* ===== TOAST ===== */
 .toast-container {

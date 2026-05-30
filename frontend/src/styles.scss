@@ -34,16 +34,29 @@ html[data-theme="dark"] body {
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--paper);
+  background-image: url('/Bckground.png');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  background-attachment: fixed;
+  transition: background-color 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+html[data-theme="dark"] {
+  /* invert so a light-toned pattern shows on the warm dark paper */
+  background-blend-mode: lighten;
+}
 
 body {
   font-family: 'Inter', 'Segoe UI', sans-serif;
-  background: var(--paper);
+  background: transparent;  /* let the html background image show through */
   color: var(--ink);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
-  transition: background-color 0.7s cubic-bezier(0.4, 0, 0.2, 1),
-              color 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* ===== Smooth theme toggle ===== */

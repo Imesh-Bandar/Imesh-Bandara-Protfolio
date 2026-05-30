@@ -24,5 +24,24 @@ app.use('/api/contact', require('./routes/contact'));
 app.use('/api/resume', require('./routes/resume'));
 app.use('/api/sdlc', require('./routes/sdlc'));
 
+// Global error handler — catches Multer errors (e.g. "Unexpected field")
+// and any other thrown errors so the client gets JSON instead of an HTML
+// error page from Express's default handler.
+const multer = require('multer');
+app.use((err, req, res, next) => {
+  if (err instanceof multer.MulterError) {
+    console.error('Multer error:', err.code, err.field);
+    return res.status(400).json({
+      message: `File upload error: ${err.message}${err.field ? ` (field: ${err.field})` : ''}`,
+      code: err.code
+    });
+  }
+  if (err) {
+    console.error('Unhandled error:', err);
+    return res.status(500).json({ message: err.message || 'Internal server error' });
+  }
+  next();
+});
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
