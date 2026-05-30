@@ -20,18 +20,22 @@ router.get('/', async (req, res) => {
 
 router.post('/', auth, upload.fields([{ name: 'profileImage', maxCount: 1 }, { name: 'signature', maxCount: 1 }]), async (req, res) => {
   try {
-    const data = { ...req.body };
+    const { _id, createdAt, updatedAt, __v, ...rest } = req.body;
+    const data = { ...rest };
     if (req.files?.profileImage?.[0]) data.profileImage = `/uploads/${req.files.profileImage[0].filename}`;
-    if (req.files?.signature?.[0]) data.signature = `/uploads/${req.files.signature[0].filename}`;
+    if (req.files?.signature?.[0])    data.signature    = `/uploads/${req.files.signature[0].filename}`;
     const existing = await About.findOne().sort({ createdAt: -1 });
     let about;
     if (existing) {
-      about = await About.findByIdAndUpdate(existing._id, data, { new: true });
+      // findByIdAndUpdate only changes keys present in `data`, so existing
+      // signature / profileImage are preserved when no new file is uploaded.
+      about = await About.findByIdAndUpdate(existing._id, data, { new: true, runValidators: true });
     } else {
       about = await About.create(data);
     }
     res.json(about);
   } catch (e) {
+    console.error('POST /about error:', e);
     res.status(400).json({ message: e.message });
   }
 });
