@@ -38,9 +38,12 @@ export class AdminProjectsComponent implements OnInit {
     this.saving = true; this.msg = ''; this.error = '';
     this.toast.info('Saving project...');
     const fd = new FormData();
-    const { techStackRaw, ...rest } = this.form;
+    // Strip techStackRaw, techStack (array — re-serialized below as JSON),
+    // image (the URL string would collide with the file field), and Mongo
+    // metadata fields that shouldn't be in updates.
+    const { techStackRaw, techStack, image, _id, createdAt, updatedAt, __v, ...rest } = this.form as any;
     Object.entries(rest).forEach(([k, v]) => v != null && fd.append(k, String(v)));
-    fd.append('techStack', JSON.stringify(techStackRaw.split(',').map(s => s.trim()).filter(Boolean)));
+    fd.append('techStack', JSON.stringify((techStackRaw || '').split(',').map((s: string) => s.trim()).filter(Boolean)));
     if (this.imageFile) fd.append('image', this.imageFile);
     const req = this.editing ? this.api.updateProject(this.editing, fd) : this.api.createProject(fd);
     req.subscribe({

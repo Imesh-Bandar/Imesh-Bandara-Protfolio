@@ -15,6 +15,13 @@ router.get('/', async (req, res) => {
   res.json(projects);
 });
 
+const parseTechStack = (raw) => {
+  if (!raw) return [];
+  if (Array.isArray(raw)) return raw.flatMap(parseTechStack);
+  try { return JSON.parse(raw); }
+  catch { return String(raw).split(',').map(s => s.trim()).filter(Boolean); }
+};
+
 const pickImage = (req) => {
   if (req.file) return req.file;
   const files = Array.isArray(req.files) ? req.files : [];
@@ -23,7 +30,7 @@ const pickImage = (req) => {
 
 router.post('/', auth, upload.any(), async (req, res) => {
   try {
-    const data = { ...req.body, techStack: JSON.parse(req.body.techStack || '[]') };
+    const data = { ...req.body, techStack: parseTechStack(req.body.techStack)};
     const img = pickImage(req);
     if (img) data.image = `/uploads/${img.filename}`;
     const project = await Project.create(data);
@@ -37,7 +44,7 @@ router.post('/', auth, upload.any(), async (req, res) => {
 router.put('/:id', auth, upload.any(), async (req, res) => {
   try {
     const { _id, createdAt, updatedAt, __v, ...rest } = req.body;
-    const data = { ...rest, techStack: JSON.parse(req.body.techStack || '[]') };
+    const data = { ...rest, techStack: parseTechStack(req.body.techStack)};
     const img = pickImage(req);
     if (img) data.image = `/uploads/${img.filename}`;
     const project = await Project.findByIdAndUpdate(req.params.id, data, { new: true, runValidators: true });

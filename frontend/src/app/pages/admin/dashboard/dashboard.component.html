@@ -37,6 +37,24 @@
         <span class="material-icons">menu</span>
       </button>
       <span class="topbar-title">Portfolio Admin</span>
+
+      <div class="topbar-spacer"></div>
+
+      <div class="topbar-clock" title="Local time">
+        <span class="material-icons">schedule</span>
+        <div class="clock-stack">
+          <span class="clock-time">{{ clockTime }}</span>
+          <span class="clock-date">{{ clockDate }}</span>
+        </div>
+      </div>
+
+      <div class="topbar-user" title="Signed in admin">
+        <div class="user-avatar">{{ adminName[0]?.toUpperCase() }}</div>
+        <div class="user-stack">
+          <span class="user-name">{{ adminName }}</span>
+          <span class="user-role">Administrator</span>
+        </div>
+      </div>
     </header>
     <div class="admin-content">
       <router-outlet />
