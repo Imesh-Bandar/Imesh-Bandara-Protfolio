@@ -197,6 +197,8 @@ html[data-theme="dark"] .navbar {
 .hero {
   min-height: 100vh;
   display: flex;
+  position: relative;
+
   flex-direction: column;
   justify-content: center;
   padding-top: 72px;
@@ -319,6 +321,8 @@ html[data-theme="dark"] .navbar {
 /* ===== SECTIONS ===== */
 .section {
   padding: 120px 0;
+  position: relative;
+
   .section-head {
     max-width: 60ch;
     margin-bottom: 56px;
@@ -345,7 +349,8 @@ html[data-theme="dark"] .navbar {
 
 /* ===== ABOUT ===== */
 .about {
-  background: var(--paper-card);
+  background: color-mix(in srgb, var(--paper-card) 70%, transparent);
+  backdrop-filter: blur(2px);
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 
@@ -473,7 +478,8 @@ html[data-theme="dark"] .navbar {
 
 /* ===== SDLC ===== */
 .process {
-  background: var(--ink);
+  background: color-mix(in srgb, var(--ink) 85%, transparent);
+  backdrop-filter: blur(2px);
   color: var(--paper);
   .label { color: #8fbfb0; }
   .section-title { color: var(--paper); }
@@ -690,7 +696,8 @@ footer { border-top: 1px solid var(--line); padding: 56px 0; }
 
 /* ===== ENHANCED FOOTER ===== */
 .footer {
-  background: var(--paper-card);
+  background: color-mix(in srgb, var(--paper-card) 75%, transparent);
+  backdrop-filter: blur(2px);
   border-top: 1px solid var(--line);
   padding: 4.5rem 0 1.5rem;
   margin-top: 2rem;

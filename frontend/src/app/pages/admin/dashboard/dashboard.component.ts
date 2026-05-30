@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { TodoWidgetComponent } from '../../../shared/todo-widget/todo-widget.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet],
+  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet, TodoWidgetComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -53,6 +54,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     { path: 'feedback',   label: 'Feedback',   icon: 'star' },
     { path: 'contact',    label: 'Contact',    icon: 'contact_mail' },
     { path: 'resume',     label: 'Resume',     icon: 'description' },
+    { path: 'calendar',   label: 'Calendar',   icon: 'calendar_month' },
   ];
 
   logout() { this.auth.logout(); }

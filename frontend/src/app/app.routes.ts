@@ -26,6 +26,7 @@ export const routes: Routes = [
       { path: 'contact',    loadComponent: () => import('./pages/admin/admin-contact/admin-contact.component').then(m => m.AdminContactComponent) },
       { path: 'resume',     loadComponent: () => import('./pages/admin/admin-resume/admin-resume.component').then(m => m.AdminResumeComponent) },
       { path: 'sdlc',       loadComponent: () => import('./pages/admin/admin-sdlc/admin-sdlc.component').then(m => m.AdminSdlcComponent) },
+      { path: 'calendar',   loadComponent: () => import('./pages/admin/admin-calendar/admin-calendar.component').then(m => m.AdminCalendarComponent) },
     ]
   },
   { path: '**', redirectTo: '' }

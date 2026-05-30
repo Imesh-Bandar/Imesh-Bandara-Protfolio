@@ -56,8 +56,11 @@
         </div>
       </div>
     </header>
-    <div class="admin-content">
-      <router-outlet />
+    <div class="admin-content-wrap">
+      <div class="admin-content">
+        <router-outlet />
+      </div>
+      <app-todo-widget class="admin-todo-rail" />
     </div>
   </div>
 

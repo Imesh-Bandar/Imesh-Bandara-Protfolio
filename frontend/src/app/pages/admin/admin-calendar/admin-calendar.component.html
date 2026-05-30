@@ -1,0 +1,95 @@
+<div class="admin-header">
+  <h2>Calendar & Tasks</h2>
+  <div class="month-stats">
+    <span class="stat-pill"><strong>{{ monthStats().total }}</strong> tasks</span>
+    <span class="stat-pill stat-done"><strong>{{ monthStats().done }}</strong> done</span>
+  </div>
+</div>
+
+<div class="cal-layout">
+  <div class="cal-card">
+    <div class="cal-toolbar">
+      <button class="cal-nav-btn" (click)="prevMonth()" title="Previous month">
+        <span class="material-icons">chevron_left</span>
+      </button>
+      <h3 class="cal-month">{{ viewLabel() }}</h3>
+      <button class="cal-nav-btn" (click)="nextMonth()" title="Next month">
+        <span class="material-icons">chevron_right</span>
+      </button>
+      <button class="cal-today-btn" (click)="goToday()" title="Jump to today">
+        <span class="material-icons">today</span> Today
+      </button>
+    </div>
+
+    <div class="cal-weekdays">
+      <span *ngFor="let d of weekdays">{{ d }}</span>
+    </div>
+
+    <div class="cal-grid">
+      <button *ngFor="let cell of monthCells()"
+              class="cal-cell"
+              [class.out-of-month]="!cell.inMonth"
+              [class.is-today]="cell.isToday"
+              [class.is-selected]="cell.isSelected"
+              [class.has-tasks]="cell.count > 0"
+              [class.has-high]="cell.hasHigh"
+              (click)="selectCell(cell)">
+        <span class="cal-day-num">{{ cell.date.getDate() }}</span>
+        <span class="cal-day-count" *ngIf="cell.count > 0">{{ cell.count }}</span>
+        <span class="cal-day-dot" *ngIf="cell.count > 0"></span>
+      </button>
+    </div>
+  </div>
+
+  <aside class="todo-card">
+    <div class="todo-head">
+      <span class="material-icons">event_note</span>
+      <div>
+        <h3>{{ selectedDateLabel() }}</h3>
+        <small>{{ selectedTodos().length }} task{{ selectedTodos().length === 1 ? '' : 's' }}</small>
+      </div>
+    </div>
+
+    <form class="todo-form" (submit)="$event.preventDefault(); addTodo()">
+      <input class="todo-input" [(ngModel)]="newText" name="todoText" placeholder="Add a task..." maxlength="120">
+      <div class="todo-form-row">
+        <label class="prio-pick" [class.active]="newPriority === 'low'" (click)="newPriority = 'low'">
+          <span class="dot low"></span>Low
+        </label>
+        <label class="prio-pick" [class.active]="newPriority === 'med'" (click)="newPriority = 'med'">
+          <span class="dot med"></span>Medium
+        </label>
+        <label class="prio-pick" [class.active]="newPriority === 'high'" (click)="newPriority = 'high'">
+          <span class="dot high"></span>High
+        </label>
+        <button type="submit" class="btn btn-primary btn-sm todo-add">
+          <span class="material-icons">add</span> Add
+        </button>
+      </div>
+    </form>
+
+    <ul class="todo-list" *ngIf="selectedTodos().length; else emptyState">
+      <li *ngFor="let t of selectedTodos()" class="todo-item" [class.done]="t.done">
+        <button class="todo-check" (click)="toggleDone(t)" [title]="t.done ? 'Mark incomplete' : 'Mark complete'">
+          <span class="material-icons">{{ t.done ? 'check_box' : 'check_box_outline_blank' }}</span>
+        </button>
+        <span class="todo-prio dot" [class.low]="t.priority === 'low'" [class.med]="t.priority === 'med'" [class.high]="t.priority === 'high'"></span>
+        <span class="todo-text">{{ t.text }}</span>
+        <button class="todo-del" (click)="deleteTodo(t)" title="Delete">
+          <span class="material-icons">close</span>
+        </button>
+      </li>
+    </ul>
+
+    <ng-template #emptyState>
+      <div class="todo-empty">
+        <span class="material-icons">task_alt</span>
+        <p>No tasks for this day. Add one above to get started.</p>
+      </div>
+    </ng-template>
+
+    <button class="todo-clear" *ngIf="selectedTodos().length" (click)="clearCompleted()">
+      <span class="material-icons">cleaning_services</span> Clear completed
+    </button>
+  </aside>
+</div>
