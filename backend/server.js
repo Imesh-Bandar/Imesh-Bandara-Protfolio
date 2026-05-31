@@ -15,12 +15,29 @@ const allowedOrigins = new Set(
     .filter(Boolean)
 );
 
+const escapeRegex = (value) => value.replace(/[.+?^${}()|[\]\\]/g, '\\$&');
+
+const wildcardOrigins = [...allowedOrigins]
+  .filter(origin => origin.includes('*'))
+  .map(origin => {
+    const escapedPattern = origin
+      .split('*')
+      .map(part => escapeRegex(part))
+      .join('.*');
+
+    return new RegExp(`^${escapedPattern}$`);
+  });
+
 const isOriginAllowed = (origin) => {
   if (!origin) {
     return true;
   }
 
   if (allowedOrigins.has('*')) {
+    return true;
+  }
+
+  if (wildcardOrigins.some(pattern => pattern.test(origin))) {
     return true;
   }
 

@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiBaseUrl: "http://localhost:5000/api",
-  assetBaseUrl: "http://localhost:5000"
+  apiBaseUrl: "https://imesh-bandara-protfolio.onrender.com/api",
+  assetBaseUrl: "https://imesh-bandara-protfolio.onrender.com"
 };
