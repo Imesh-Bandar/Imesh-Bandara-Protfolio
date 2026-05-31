@@ -2,12 +2,13 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
   private http = inject(HttpClient);
   private router = inject(Router);
-  private api = 'http://localhost:5000/api/auth';
+  private api = `${environment.apiBaseUrl}/auth`;
 
   login(email: string, password: string) {
     return this.http.post<{ token: string; email: string }>(`${this.api}/login`, { email, password }).pipe(

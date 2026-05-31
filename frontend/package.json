@@ -3,6 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
+    "sync-env": "node scripts/sync-env.mjs",
+    "prestart": "npm run sync-env",
+    "prebuild": "npm run sync-env",
     "start": "ng serve --port 4200",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",

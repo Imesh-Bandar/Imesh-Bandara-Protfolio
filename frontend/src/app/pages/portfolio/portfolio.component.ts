@@ -6,6 +6,7 @@ import { of, forkJoin } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { ThemeService } from '../../core/services/theme.service';
 import { About, Project, Skill, Tool, Education, Experience, Feedback, Contact, SdlcPhase } from '../../core/models';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-portfolio',
@@ -18,6 +19,7 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnDestroy {
   private api = inject(ApiService);
   private cdr = inject(ChangeDetectorRef);
   theme = inject(ThemeService);
+  readonly assetBaseUrl = environment.assetBaseUrl;
 
   about?: About;
   projects: Project[] = [];
@@ -39,12 +41,12 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnDestroy {
   /** Default 6 Agile phases shown when no SDLC data exists in the backend
       yet — guarantees the ring is always visible. */
   private readonly defaultPhases: SdlcPhase[] = [
-    { phase: '1', title: 'Requirements', description: 'Gather project goals, scope, and user stories with the client through discovery sessions.',         icon: 'assignment',     order: 0 },
-    { phase: '2', title: 'Design',       description: 'Wireframe, prototype, and design the UI/UX flow before writing a single line of code.',              icon: 'design_services',order: 1 },
-    { phase: '3', title: 'Development',  description: 'Build the feature in short sprints with clean, modular, well-tested code.',                          icon: 'code',           order: 2 },
-    { phase: '4', title: 'Testing',      description: 'Run unit, integration, and manual QA tests to verify the feature works as intended.',                icon: 'bug_report',     order: 3 },
-    { phase: '5', title: 'Deployment',   description: 'Ship to staging, gather sign-off, and release to production with rollback safety nets.',             icon: 'rocket_launch',  order: 4 },
-    { phase: '6', title: 'Review',       description: 'Collect feedback, measure impact, and plan the next iteration — back to step 1.',                    icon: 'reviews',        order: 5 },
+    { phase: '1', title: 'Requirements', description: 'Gather project goals, scope, and user stories with the client through discovery sessions.', icon: 'assignment', order: 0 },
+    { phase: '2', title: 'Design', description: 'Wireframe, prototype, and design the UI/UX flow before writing a single line of code.', icon: 'design_services', order: 1 },
+    { phase: '3', title: 'Development', description: 'Build the feature in short sprints with clean, modular, well-tested code.', icon: 'code', order: 2 },
+    { phase: '4', title: 'Testing', description: 'Run unit, integration, and manual QA tests to verify the feature works as intended.', icon: 'bug_report', order: 3 },
+    { phase: '5', title: 'Deployment', description: 'Ship to staging, gather sign-off, and release to production with rollback safety nets.', icon: 'rocket_launch', order: 4 },
+    { phase: '6', title: 'Review', description: 'Collect feedback, measure impact, and plan the next iteration — back to step 1.', icon: 'reviews', order: 5 },
   ];
 
   /** Phases to render — backend data if present, otherwise the defaults. */
@@ -99,27 +101,27 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnDestroy {
     this.loading = true;
 
     forkJoin({
-      about:      this.api.getAbout().pipe(catchError(() => of(undefined))),
-      projects:   this.api.getProjects().pipe(catchError(() => of([] as Project[]))),
-      skills:     this.api.getSkills().pipe(catchError(() => of([] as Skill[]))),
-      tools:      this.api.getTools().pipe(catchError(() => of([] as Tool[]))),
-      education:  this.api.getEducation().pipe(catchError(() => of([] as Education[]))),
+      about: this.api.getAbout().pipe(catchError(() => of(undefined))),
+      projects: this.api.getProjects().pipe(catchError(() => of([] as Project[]))),
+      skills: this.api.getSkills().pipe(catchError(() => of([] as Skill[]))),
+      tools: this.api.getTools().pipe(catchError(() => of([] as Tool[]))),
+      education: this.api.getEducation().pipe(catchError(() => of([] as Education[]))),
       experience: this.api.getExperience().pipe(catchError(() => of([] as Experience[]))),
-      feedback:   this.api.getFeedback().pipe(catchError(() => of([] as Feedback[]))),
-      contact:    this.api.getContact().pipe(catchError(() => of(undefined))),
-      sdlc:       this.api.getSdlc().pipe(catchError(() => of([] as SdlcPhase[])))
+      feedback: this.api.getFeedback().pipe(catchError(() => of([] as Feedback[]))),
+      contact: this.api.getContact().pipe(catchError(() => of(undefined))),
+      sdlc: this.api.getSdlc().pipe(catchError(() => of([] as SdlcPhase[])))
     }).pipe(
       finalize(() => { this.loading = false; this.cdr.markForCheck(); })
     ).subscribe(res => {
       if (res.about) this.about = res.about;
-      this.projects   = res.projects;
-      this.skills     = res.skills;
-      this.tools      = res.tools;
-      this.education  = res.education;
+      this.projects = res.projects;
+      this.skills = res.skills;
+      this.tools = res.tools;
+      this.education = res.education;
       this.experience = res.experience;
-      this.feedback   = res.feedback;
+      this.feedback = res.feedback;
       if (res.contact) this.contact = res.contact;
-      this.sdlc       = res.sdlc;
+      this.sdlc = res.sdlc;
 
       this.skillCategories = [...new Set(res.skills.map(s => s.category))];
       this.skillsByCategory = this.skillCategories.reduce((acc, cat) => {
@@ -166,6 +168,11 @@ export class PortfolioComponent implements OnInit, AfterViewInit, OnDestroy {
 
   getStars(n: number): string {
     return '★'.repeat(n) + '☆'.repeat(5 - n);
+  }
+
+  resolveAssetUrl(path?: string): string | undefined {
+    if (!path) return undefined;
+    return path.startsWith('http') ? path : `${this.assetBaseUrl}${path}`;
   }
 
   getEduByType(type: string): Education[] {

@@ -79,6 +79,16 @@ npm run build
 # serve backend and copy frontend/dist content to a static host, or configure Express to serve built files
 ```
 
+Frontend environment files
+
+- The frontend reads deployment settings from `frontend/.env` when you run `npm run build`.
+- Development API base: `frontend/src/environments/environment.ts`
+- Production API base: `frontend/src/environments/environment.prod.ts`
+- `API_BASE_URL` controls API requests.
+- `ASSET_BASE_URL` controls uploaded image and signature URLs.
+- The default values use same-origin paths (`/api` and `/uploads`), which works when the built frontend is served behind the backend or a reverse proxy.
+- If you deploy the frontend and backend on separate domains, update `frontend/.env` before building.
+
 Troubleshooting
 
 - CORS errors: ensure backend `PORT` and `MONGODB_URI` are set and frontend is served from `http://localhost:4200` (or update backend CORS origin in `backend/server.js`).

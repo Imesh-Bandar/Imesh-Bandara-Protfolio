@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../../core/services/api.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { Project } from '../../../core/models';
+import { environment } from '../../../../environments/environment';
 
 @Component({ selector: 'app-admin-projects', standalone: true, imports: [CommonModule, FormsModule], templateUrl: './admin-projects.component.html' })
 export class AdminProjectsComponent implements OnInit {
@@ -22,7 +23,7 @@ export class AdminProjectsComponent implements OnInit {
   edit(p: Project) {
     this.editing = p._id;
     this.form = { ...p, techStackRaw: p.techStack?.join(', ') || '' };
-    this.imagePreview = p.image ? 'http://localhost:5000' + p.image : undefined;
+    this.imagePreview = p.image ? `${environment.assetBaseUrl}${p.image}` : undefined;
   }
 
   reset() { this.editing = undefined; this.form = { title: '', description: '', techStackRaw: '', githubUrl: '', liveUrl: '', ownerName: '', ownerEmail: '' }; this.imageFile = undefined; this.imagePreview = undefined; }

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { ApiService } from '../../../core/services/api.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { Feedback } from '../../../core/models';
+import { environment } from '../../../../environments/environment';
 
 @Component({ selector: 'app-admin-feedback', standalone: true, imports: [CommonModule, FormsModule], templateUrl: './admin-feedback.component.html' })
 export class AdminFeedbackComponent implements OnInit {
@@ -21,7 +22,7 @@ export class AdminFeedbackComponent implements OnInit {
 
   edit(f: Feedback) {
     this.editing = f._id; this.form = { ...f };
-    this.avatarPreview = f.avatar ? 'http://localhost:5000' + f.avatar : undefined;
+    this.avatarPreview = f.avatar ? `${environment.assetBaseUrl}${f.avatar}` : undefined;
   }
   reset() { this.editing = undefined; this.form = { clientName: '', clientRole: '', company: '', message: '', rating: 5, approved: true }; this.avatarFile = undefined; this.avatarPreview = undefined; }
 

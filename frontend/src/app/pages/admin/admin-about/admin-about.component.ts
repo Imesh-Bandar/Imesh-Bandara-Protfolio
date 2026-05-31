@@ -5,6 +5,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
 import { ToastService } from '../../../core/services/toast.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-admin-about',
@@ -90,7 +91,7 @@ export class AdminAboutComponent implements OnInit, AfterViewInit {
         this.msg = 'Saved successfully!';
         this.toast.success('About section saved!');
         if (d?.profileImage) { this.form.profileImage = d.profileImage; this.imagePreview = this.toAssetUrl(d.profileImage); this.imageFile = undefined; }
-        if (d?.signature)    { this.form.signature = d.signature;       this.signaturePreview = this.toAssetUrl(d.signature); this.signatureFile = undefined; }
+        if (d?.signature) { this.form.signature = d.signature; this.signaturePreview = this.toAssetUrl(d.signature); this.signatureFile = undefined; }
       },
       error: (err: HttpErrorResponse) => {
         this.saving = false;
@@ -108,7 +109,7 @@ export class AdminAboutComponent implements OnInit, AfterViewInit {
   }
 
   private toAssetUrl(path: string): string {
-    return path.startsWith('http') ? path : `http://localhost:5000${path}`;
+    return path.startsWith('http') ? path : `${environment.assetBaseUrl}${path}`;
   }
 
   /* ===== Signature drawing pad ===== */

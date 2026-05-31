@@ -16,10 +16,9 @@
     <div class="nav-actions">
       <!-- Mobile-only theme toggle (sits to the LEFT of the burger).
            Desktop has its own toggle inside .nav-links after Contact. -->
-      <button class="theme-toggle theme-toggle-mobile"
-              (click)="theme.toggle()"
-              [attr.aria-label]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
-              title="Toggle dark/light mode">
+      <button class="theme-toggle theme-toggle-mobile" (click)="theme.toggle()"
+        [attr.aria-label]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+        title="Toggle dark/light mode">
         <span class="material-icons">{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</span>
       </button>
 
@@ -39,7 +38,9 @@
       <li><a (click)="scrollTo('feedback')">Feedback</a></li>
       <li><a (click)="scrollTo('contact')">Contact</a></li>
       <li class="nav-theme-item">
-        <button class="theme-toggle" (click)="theme.toggle()" [attr.aria-label]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'" title="Toggle dark/light mode">
+        <button class="theme-toggle" (click)="theme.toggle()"
+          [attr.aria-label]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+          title="Toggle dark/light mode">
           <span class="material-icons">{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</span>
         </button>
       </li>
@@ -66,7 +67,7 @@
       </div>
     </div>
     <div class="hero-avatar" *ngIf="about?.profileImage">
-      <img [src]="'http://localhost:5000' + about!.profileImage" [alt]="about?.name">
+      <img [src]="resolveAssetUrl(about!.profileImage)" [alt]="about?.name">
     </div>
     <div class="hero-avatar-placeholder" *ngIf="!about?.profileImage">
       <div class="avatar-icon">{{ (about?.name || 'I')[0] }}</div>
@@ -97,7 +98,7 @@
           </div>
         </div>
         <div class="about-signature" *ngIf="about.signature">
-          <img [src]="'http://localhost:5000' + about.signature" [alt]="about.name + ' signature'" class="sig-image">
+          <img [src]="resolveAssetUrl(about.signature)" [alt]="about.name + ' signature'" class="sig-image">
         </div>
       </div>
     </div>
@@ -112,7 +113,7 @@
     <div class="grid-2">
       <div class="card project-card" *ngFor="let p of projects">
         <div class="project-img" *ngIf="p.image">
-          <img [src]="'http://localhost:5000' + p.image" [alt]="p.title">
+          <img [src]="resolveAssetUrl(p.image)" [alt]="p.title">
         </div>
         <div class="project-img-placeholder" *ngIf="!p.image">
           <span class="material-icons">code</span>
@@ -192,7 +193,8 @@
     </div>
     <h2 class="section-title reveal reveal-up">Development <span>Process</span></h2>
     <p class="section-subtitle reveal reveal-up reveal-delay-1">
-      I follow an <strong>Agile Development</strong> workflow — short sprints, frequent client check-ins, and continuous improvement from idea to launch.
+      I follow an <strong>Agile Development</strong> workflow — short sprints, frequent client check-ins, and continuous
+      improvement from idea to launch.
     </p>
     <!-- Circular agile ring -->
     <div class="agile-ring-wrap reveal reveal-zoom">
@@ -207,13 +209,9 @@
         </div>
 
         <!-- Each phase positioned around the ring -->
-        <div *ngFor="let s of displayPhases; let i = index"
-             class="agile-phase"
-             [class]="'agile-phase-' + (i % 6)"
-             [style.--idx]="i"
-             (mouseenter)="hoveredPhase = i"
-             (mouseleave)="hoveredPhase = null"
-             [class.is-active]="hoveredPhase === i">
+        <div *ngFor="let s of displayPhases; let i = index" class="agile-phase" [class]="'agile-phase-' + (i % 6)"
+          [style.--idx]="i" (mouseenter)="hoveredPhase = i" (mouseleave)="hoveredPhase = null"
+          [class.is-active]="hoveredPhase === i">
           <div class="agile-phase-inner">
             <span class="agile-phase-num">{{ i + 1 }}</span>
             <span class="material-icons agile-phase-icon">{{ s.icon || 'circle' }}</span>
@@ -315,7 +313,8 @@
 <section id="feedback" class="section section-alt reveal reveal-up">
   <div class="container">
     <h2 class="section-title reveal reveal-up">Client <span>Feedback</span></h2>
-    <p class="section-subtitle reveal reveal-up reveal-delay-1">What people say about working with me, and leave your own feedback</p>
+    <p class="section-subtitle reveal reveal-up reveal-delay-1">What people say about working with me, and leave your
+      own feedback</p>
 
     <div class="grid-3" *ngIf="feedback.length; else noFeedbackYet">
       <div class="feedback-card card" *ngFor="let f of feedback">
@@ -323,7 +322,7 @@
         <p class="feedback-msg">"{{ f.message }}"</p>
         <div class="feedback-author">
           <div class="author-avatar">
-            <img *ngIf="f.avatar" [src]="'http://localhost:5000' + f.avatar" [alt]="f.clientName">
+            <img *ngIf="f.avatar" [src]="resolveAssetUrl(f.avatar)" [alt]="f.clientName">
             <span *ngIf="!f.avatar">{{ f.clientName[0] }}</span>
           </div>
           <div>
@@ -451,7 +450,8 @@
           <a *ngIf="contact.linkedin" [href]="contact.linkedin" target="_blank" aria-label="LinkedIn" title="LinkedIn">
             <span class="material-icons">business_center</span>
           </a>
-          <a *ngIf="contact.whatsapp" [href]="'https://wa.me/' + contact.whatsapp" target="_blank" aria-label="WhatsApp" title="WhatsApp">
+          <a *ngIf="contact.whatsapp" [href]="'https://wa.me/' + contact.whatsapp" target="_blank" aria-label="WhatsApp"
+            title="WhatsApp">
             <span class="material-icons">chat</span>
           </a>
           <a *ngIf="contact.facebook" [href]="contact.facebook" target="_blank" aria-label="Facebook" title="Facebook">
