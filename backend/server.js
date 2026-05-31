@@ -7,7 +7,7 @@ dotenv.config();
 connectDB();
 
 const app = express();
-const allowedOrigins = (process.env.CORS_ORIGIN || process.env.FRONTEND_ORIGIN || 'http://localhost:4200')
+const allowedOrigins = (process.env.CORS_ORIGIN || process.env.FRONTEND_ORIGIN || 'https://imeshbandara.netlify.app/,http://localhost:4200')
   .split(',')
   .map(origin => origin.trim())
   .filter(Boolean);
