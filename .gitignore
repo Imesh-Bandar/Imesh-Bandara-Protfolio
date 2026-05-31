@@ -4,3 +4,5 @@
 # Backend environment variables
 backend/.env
 backend/.env.example
+# Claude local config
+.claude/
