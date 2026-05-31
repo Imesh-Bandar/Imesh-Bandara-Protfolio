@@ -7,14 +7,29 @@ dotenv.config();
 connectDB();
 
 const app = express();
-const allowedOrigins = ("*" + process.env.CORS_ORIGIN + "," + process.env.FRONTEND_ORIGIN)
-  .split(',')
-  .map(origin => origin.trim())
-  .filter(Boolean);
+const allowedOrigins = new Set(
+  [process.env.CORS_ORIGIN, process.env.FRONTEND_ORIGIN]
+    .filter(Boolean)
+    .flatMap(value => value.split(','))
+    .map(origin => origin.trim())
+    .filter(Boolean)
+);
+
+const isOriginAllowed = (origin) => {
+  if (!origin) {
+    return true;
+  }
+
+  if (allowedOrigins.has('*')) {
+    return true;
+  }
+
+  return allowedOrigins.has(origin);
+};
 
 app.use(cors({
   origin: (origin, callback) => {
-    if (!origin || allowedOrigins.includes(origin)) {
+    if (isOriginAllowed(origin)) {
       return callback(null, true);
     }
     return callback(new Error(`CORS blocked for origin: ${origin}`));
