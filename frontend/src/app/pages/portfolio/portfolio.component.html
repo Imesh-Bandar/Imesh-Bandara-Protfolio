@@ -14,6 +14,15 @@
     </a>
 
     <div class="nav-actions">
+      <!-- Mobile-only theme toggle (sits to the LEFT of the burger).
+           Desktop has its own toggle inside .nav-links after Contact. -->
+      <button class="theme-toggle theme-toggle-mobile"
+              (click)="theme.toggle()"
+              [attr.aria-label]="theme.isDark() ? 'Switch to light mode' : 'Switch to dark mode'"
+              title="Toggle dark/light mode">
+        <span class="material-icons">{{ theme.isDark() ? 'light_mode' : 'dark_mode' }}</span>
+      </button>
+
       <button class="burger" (click)="menuOpen = !menuOpen" [class.open]="menuOpen">
         <span></span><span></span><span></span>
       </button>
@@ -69,10 +78,10 @@
 </section>
 
 <!-- ===== ABOUT ===== -->
-<section id="about" class="section">
+<section id="about" class="section reveal reveal-up">
   <div class="container">
-    <h2 class="section-title">About <span>Me</span></h2>
-    <p class="section-subtitle">Who I am and what drives me</p>
+    <h2 class="section-title reveal reveal-up">About <span>Me</span></h2>
+    <p class="section-subtitle reveal reveal-up reveal-delay-1">Who I am and what drives me</p>
     <div class="about-grid" *ngIf="about">
       <div class="about-bio card">
         <p>{{ about.bio }}</p>
@@ -96,10 +105,10 @@
 </section>
 
 <!-- ===== PROJECTS ===== -->
-<section id="projects" class="section section-alt">
+<section id="projects" class="section section-alt reveal reveal-up">
   <div class="container">
-    <h2 class="section-title">My <span>Projects</span></h2>
-    <p class="section-subtitle">What I've built</p>
+    <h2 class="section-title reveal reveal-up">My <span>Projects</span></h2>
+    <p class="section-subtitle reveal reveal-up reveal-delay-1">What I've built</p>
     <div class="grid-2">
       <div class="card project-card" *ngFor="let p of projects">
         <div class="project-img" *ngIf="p.image">
@@ -129,10 +138,10 @@
 </section>
 
 <!-- ===== SKILLS ===== -->
-<section id="skills" class="section">
+<section id="skills" class="section reveal reveal-up">
   <div class="container">
-    <h2 class="section-title">My <span>Skills</span></h2>
-    <p class="section-subtitle">Technologies I work with</p>
+    <h2 class="section-title reveal reveal-up">My <span>Skills</span></h2>
+    <p class="section-subtitle reveal reveal-up reveal-delay-1">Technologies I work with</p>
     <div class="skills-grid">
       <div class="skill-category card" *ngFor="let cat of skillCategories">
         <h4 class="cat-title">{{ cat }}</h4>
@@ -157,10 +166,10 @@
 </section>
 
 <!-- ===== TOOLS ===== -->
-<section id="tools" class="section section-alt">
+<section id="tools" class="section section-alt reveal reveal-up">
   <div class="container">
-    <h2 class="section-title">My <span>Tools</span></h2>
-    <p class="section-subtitle">What I use to build software</p>
+    <h2 class="section-title reveal reveal-up">My <span>Tools</span></h2>
+    <p class="section-subtitle reveal reveal-up reveal-delay-1">What I use to build software</p>
     <div class="tools-grid">
       <div class="tool-chip card" *ngFor="let t of tools">
         <div class="tool-logo" *ngIf="getToolLogo(t)">
@@ -174,31 +183,61 @@
 </section>
 
 <!-- ===== SDLC PROCESS ===== -->
-<section id="sdlc" class="section">
+<section id="sdlc" class="section reveal reveal-up">
   <div class="container">
-    <h2 class="section-title">Development <span>Process</span></h2>
-    <p class="section-subtitle">How I work with clients — from idea to launch</p>
-    <div class="sdlc-wrapper">
-      <div class="sdlc-grid">
-        <div class="sdlc-item" *ngFor="let s of sdlc; let last = last">
-          <div class="sdlc-step card">
-            <div class="step-number">{{ s.phase }}</div>
-            <span class="material-icons step-icon">{{ s.icon || 'circle' }}</span>
-            <h4>{{ s.title }}</h4>
-            <p>{{ s.description }}</p>
+    <div class="sdlc-tag reveal reveal-up">
+      <span class="material-icons">autorenew</span>
+      <span class="sdlc-tag-text">Agile Development</span>
+      <span class="sdlc-tag-meta">Iterative · Feedback-driven · Continuous delivery</span>
+    </div>
+    <h2 class="section-title reveal reveal-up">Development <span>Process</span></h2>
+    <p class="section-subtitle reveal reveal-up reveal-delay-1">
+      I follow an <strong>Agile Development</strong> workflow — short sprints, frequent client check-ins, and continuous improvement from idea to launch.
+    </p>
+    <!-- Circular agile ring -->
+    <div class="agile-ring-wrap reveal reveal-zoom">
+      <div class="agile-ring" [style.--total]="displayPhases.length">
+        <!-- Animated rotating dashed orbit -->
+        <div class="agile-orbit"></div>
+
+        <!-- Central AGILE hub -->
+        <div class="agile-center">
+          <span class="agile-center-label">AGILE</span>
+          <span class="agile-center-sub">workflow</span>
+        </div>
+
+        <!-- Each phase positioned around the ring -->
+        <div *ngFor="let s of displayPhases; let i = index"
+             class="agile-phase"
+             [class]="'agile-phase-' + (i % 6)"
+             [style.--idx]="i"
+             (mouseenter)="hoveredPhase = i"
+             (mouseleave)="hoveredPhase = null"
+             [class.is-active]="hoveredPhase === i">
+          <div class="agile-phase-inner">
+            <span class="agile-phase-num">{{ i + 1 }}</span>
+            <span class="material-icons agile-phase-icon">{{ s.icon || 'circle' }}</span>
+            <span class="agile-phase-title">{{ s.title }}</span>
           </div>
-          <div class="sdlc-connector" *ngIf="!last"></div>
         </div>
       </div>
+
+      <!-- Details panel — shows the description of the currently-hovered phase -->
+      <div class="agile-details">
+        <span class="agile-details-num">Phase {{ (hoveredPhase ?? 0) + 1 }}</span>
+        <h4>{{ displayPhases[hoveredPhase ?? 0].title }}</h4>
+        <p>{{ displayPhases[hoveredPhase ?? 0].description }}</p>
+      </div>
     </div>
+
   </div>
 </section>
 
 <!-- ===== EDUCATION ===== -->
-<section id="education" class="section section-alt">
+<section id="education" class="section section-alt reveal reveal-up">
   <div class="container">
-    <h2 class="section-title">My <span>Education</span></h2>
-    <p class="section-subtitle">Academic background and certifications</p>
+    <h2 class="section-title reveal reveal-up">My <span>Education</span></h2>
+    <p class="section-subtitle reveal reveal-up reveal-delay-1">Academic background and certifications</p>
 
     <div class="edu-group" *ngIf="getEduByType('degree').length">
       <h4 class="edu-group-title"><span class="material-icons">school</span> Degree</h4>
@@ -246,10 +285,10 @@
 </section>
 
 <!-- ===== EXPERIENCE ===== -->
-<section id="experience" class="section">
+<section id="experience" class="section reveal reveal-up">
   <div class="container">
-    <h2 class="section-title">Work <span>Experience</span></h2>
-    <p class="section-subtitle">My professional journey</p>
+    <h2 class="section-title reveal reveal-up">Work <span>Experience</span></h2>
+    <p class="section-subtitle reveal reveal-up reveal-delay-1">My professional journey</p>
     <div class="timeline">
       <div class="timeline-item" *ngFor="let e of experience">
         <div class="timeline-dot"></div>
@@ -273,10 +312,10 @@
 </section>
 
 <!-- ===== FEEDBACK ===== -->
-<section id="feedback" class="section section-alt">
+<section id="feedback" class="section section-alt reveal reveal-up">
   <div class="container">
-    <h2 class="section-title">Client <span>Feedback</span></h2>
-    <p class="section-subtitle">What people say about working with me, and leave your own feedback</p>
+    <h2 class="section-title reveal reveal-up">Client <span>Feedback</span></h2>
+    <p class="section-subtitle reveal reveal-up reveal-delay-1">What people say about working with me, and leave your own feedback</p>
 
     <div class="grid-3" *ngIf="feedback.length; else noFeedbackYet">
       <div class="feedback-card card" *ngFor="let f of feedback">
@@ -331,10 +370,10 @@
 </section>
 
 <!-- ===== CONTACT ===== -->
-<section id="contact" class="section">
+<section id="contact" class="section reveal reveal-up">
   <div class="container">
-    <h2 class="section-title">Get In <span>Touch</span></h2>
-    <p class="section-subtitle">Let's work together — reach me here</p>
+    <h2 class="section-title reveal reveal-up">Get In <span>Touch</span></h2>
+    <p class="section-subtitle reveal reveal-up reveal-delay-1">Let's work together — reach me here</p>
     <div class="contact-grid" *ngIf="contact">
       <a *ngIf="contact.email" [href]="'mailto:' + contact.email" class="contact-card card">
         <span class="material-icons">email</span>

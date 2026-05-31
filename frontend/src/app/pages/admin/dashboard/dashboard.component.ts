@@ -1,48 +1,30 @@
-import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { ToastService } from '../../../core/services/toast.service';
 import { ThemeService } from '../../../core/services/theme.service';
 import { TodoWidgetComponent } from '../../../shared/todo-widget/todo-widget.component';
+import { ClockWidgetComponent } from '../../../shared/clock-widget/clock-widget.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet, TodoWidgetComponent],
+  imports: [CommonModule, RouterLink, RouterLinkActive, RouterOutlet, TodoWidgetComponent, ClockWidgetComponent],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent implements OnInit, OnDestroy {
+export class DashboardComponent {
   private auth = inject(AuthService);
   toast = inject(ToastService);
   theme = inject(ThemeService);
   sidebarOpen = false;
-
-  /* ===== Live clock ===== */
-  now = signal(new Date());
-  private clockTimer?: any;
+  sidebarCollapsed = localStorage.getItem('admin_sidebar_collapsed') === '1';
   adminName = localStorage.getItem('admin_name') || 'Admin';
 
-  ngOnInit() {
-    // Align to next second tick, then update every 1s
-    const align = 1000 - (Date.now() % 1000);
-    setTimeout(() => {
-      this.now.set(new Date());
-      this.clockTimer = setInterval(() => this.now.set(new Date()), 1000);
-    }, align);
-  }
-
-  ngOnDestroy() {
-    if (this.clockTimer) clearInterval(this.clockTimer);
-  }
-
-  get clockTime(): string {
-    return this.now().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true });
-  }
-
-  get clockDate(): string {
-    return this.now().toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
+  toggleSidebarCollapse() {
+    this.sidebarCollapsed = !this.sidebarCollapsed;
+    localStorage.setItem('admin_sidebar_collapsed', this.sidebarCollapsed ? '1' : '0');
   }
 
   navItems = [

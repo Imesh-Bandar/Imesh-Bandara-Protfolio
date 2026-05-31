@@ -1,0 +1,216 @@
+:host { display: block; }
+
+.clock-widget {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1.3rem 1.1rem 1.1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.85rem;
+  box-shadow: 0 4px 24px -18px rgba(0,0,0,0.18);
+  position: relative;
+  overflow: hidden;
+
+  /* Soft accent corner glow */
+  &::before {
+    content: '';
+    position: absolute;
+    top: -40%; right: -30%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, color-mix(in srgb, var(--accent) 24%, transparent), transparent 70%);
+    pointer-events: none;
+  }
+}
+
+/* Greeting */
+.cw-greet {
+  display: inline-flex; align-items: center; gap: 0.4rem;
+  padding: 0.3rem 0.85rem;
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+  .cw-greet-icon { font-size: 0.9rem; }
+}
+
+/* ===== Analog face ===== */
+.cw-analog {
+  position: relative;
+  z-index: 1;
+  padding: 0.4rem;
+}
+.cw-face {
+  position: relative;
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 25%, color-mix(in srgb, var(--paper) 95%, transparent), var(--paper-card) 70%);
+  border: 2px solid var(--line);
+  box-shadow:
+    inset 0 2px 8px color-mix(in srgb, var(--ink) 8%, transparent),
+    0 12px 24px -16px rgba(0,0,0,0.25);
+}
+
+.cw-tick {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 2px; height: 50%;
+  transform-origin: top center;
+  pointer-events: none;
+}
+.cw-tick-bar {
+  position: absolute;
+  top: 4px; left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 6px;
+  background: var(--ink-soft);
+  border-radius: 1px;
+  opacity: 0.5;
+  &.major {
+    height: 10px;
+    width: 2.5px;
+    background: var(--ink);
+    opacity: 0.9;
+  }
+}
+
+/* Hands — all anchored at the bottom-center of their rectangle so the
+   rotation happens around the pivot at the face center. */
+.cw-hand {
+  position: absolute;
+  bottom: 50%;
+  left: 50%;
+  transform-origin: 50% 100%;
+  border-radius: 4px;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.cw-hand-hour {
+  width: 4px;
+  height: 32px;
+  background: var(--ink);
+}
+.cw-hand-min {
+  width: 3px;
+  height: 46px;
+  background: var(--ink);
+}
+.cw-hand-sec {
+  width: 2px;
+  height: 50px;
+  background: var(--accent);
+  /* tiny tail past the pivot */
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+}
+
+.cw-pivot {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: var(--paper-card);
+  border: 2px solid var(--accent);
+  transform: translate(-50%, -50%);
+  z-index: 5;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* ===== Digital read-out ===== */
+.cw-digital {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 1px;
+  font-family: 'JetBrains Mono', 'SF Mono', 'Consolas', monospace;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  position: relative;
+  z-index: 1;
+  .cw-hh, .cw-mm { font-size: 1.45rem; font-weight: 700; letter-spacing: -0.02em; }
+  .cw-colon { font-size: 1.45rem; font-weight: 700; color: var(--accent); animation: cw-blink 1s steps(2, end) infinite; padding: 0 1px; }
+  .cw-ss {
+    margin-left: 0.4rem;
+    font-size: 0.85rem;
+    color: var(--accent);
+    font-weight: 600;
+    padding: 2px 6px;
+    background: var(--accent-soft);
+    border-radius: 6px;
+  }
+  .cw-ap {
+    margin-left: 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--ink-soft);
+  }
+}
+@keyframes cw-blink { 50% { opacity: 0.25; } }
+
+/* ===== Date block ===== */
+.cw-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  position: relative;
+  z-index: 1;
+  .cw-weekday {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    font-weight: 600;
+  }
+  .cw-daynum {
+    font-family: 'Fraunces', serif;
+    font-size: 2.2rem;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .cw-monyear {
+    font-size: 0.75rem;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+  }
+}
+
+/* ===== Signature ===== */
+.cw-sig {
+  display: flex; align-items: center; gap: 0.55rem;
+  width: 100%;
+  margin-top: 0.3rem;
+  position: relative;
+  z-index: 1;
+  .cw-sig-line {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--line), transparent);
+  }
+  .cw-sig-text {
+    font-family: 'Fraunces', serif;
+    font-style: italic;
+    font-size: 0.78rem;
+    color: var(--accent);
+    letter-spacing: 0.04em;
+  }
+}

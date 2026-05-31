@@ -1,0 +1,53 @@
+<div class="clock-widget">
+  <!-- Greeting strip -->
+  <div class="cw-greet">
+    <span class="cw-greet-icon material-icons">auto_awesome</span>
+    <span>{{ greeting() }}</span>
+  </div>
+
+  <!-- Analog face -->
+  <div class="cw-analog">
+    <div class="cw-face">
+      <!-- 12 tick marks -->
+      <span *ngFor="let t of ticks" class="cw-tick" [style.transform]="'rotate(' + (t * 30) + 'deg)'">
+        <span class="cw-tick-bar" [class.major]="t % 3 === 0"></span>
+      </span>
+
+      <!-- Hour hand -->
+      <span class="cw-hand cw-hand-hour"
+            [style.transform]="'translateX(-50%) rotate(' + hourDeg() + 'deg)'"></span>
+      <!-- Minute hand -->
+      <span class="cw-hand cw-hand-min"
+            [style.transform]="'translateX(-50%) rotate(' + minuteDeg() + 'deg)'"></span>
+      <!-- Second hand -->
+      <span class="cw-hand cw-hand-sec"
+            [style.transform]="'translateX(-50%) rotate(' + secondDeg() + 'deg)'"></span>
+
+      <!-- Center pivot -->
+      <span class="cw-pivot"></span>
+    </div>
+  </div>
+
+  <!-- Digital read-out -->
+  <div class="cw-digital">
+    <span class="cw-hh">{{ hh() }}</span>
+    <span class="cw-colon">:</span>
+    <span class="cw-mm">{{ mm() }}</span>
+    <span class="cw-ss">{{ ss() }}</span>
+    <span class="cw-ap">{{ ap() }}</span>
+  </div>
+
+  <!-- Date block -->
+  <div class="cw-date">
+    <span class="cw-weekday">{{ weekday() }}</span>
+    <span class="cw-daynum">{{ dayNum() }}</span>
+    <span class="cw-monyear">{{ monthYear() }}</span>
+  </div>
+
+  <!-- Signature line -->
+  <div class="cw-sig">
+    <span class="cw-sig-line"></span>
+    <span class="cw-sig-text">— Imesh</span>
+    <span class="cw-sig-line"></span>
+  </div>
+</div>

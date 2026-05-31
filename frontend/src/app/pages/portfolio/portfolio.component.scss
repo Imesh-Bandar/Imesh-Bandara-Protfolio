@@ -69,13 +69,26 @@
     font-size: 1.4rem;
     font-weight: 600;
     letter-spacing: -0.02em;
-    display: flex;
+    /* Use inline-flex + tight line-height so the serif glyphs sit
+       vertically centered within the navbar row instead of being
+       pushed down by inherited line-height: 1.6 from <body>. */
+    display: inline-flex;
     align-items: center;
     gap: 9px;
+    line-height: 1;
+    height: 100%;
+    margin: 0;
+    padding: 0;
     cursor: pointer;
     color: var(--ink);
     transition: font-size 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    .brand-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); transition: width 0.3s ease, height 0.3s ease; }
+    .brand-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      transition: width 0.3s ease, height 0.3s ease;
+    }
   }
 
   .nav-links {
@@ -526,10 +539,291 @@ html[data-theme="dark"] .navbar {
   padding: 2px;
 }
 
+/* ===== SDLC Agile tag ===== */
+.sdlc-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.55rem 1.1rem 0.55rem 0.75rem;
+  background: color-mix(in srgb, #8fbfb0 18%, transparent);
+  border: 1px solid color-mix(in srgb, #8fbfb0 35%, transparent);
+  border-radius: 999px;
+  color: #d5dae0;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+  .material-icons {
+    font-size: 1.1rem;
+    color: #8fbfb0;
+    animation: agile-spin 6s linear infinite;
+  }
+  .sdlc-tag-text {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: #ffffff;
+  }
+  .sdlc-tag-meta {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.7);
+    letter-spacing: 0.02em;
+  }
+}
+@keyframes agile-spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ===== AGILE RING ===== */
+.agile-ring-wrap {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 3rem;
+  align-items: center;
+  margin-top: 2rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+.agile-ring {
+  --ring-size: 540px;
+  --phase-size: 140px;
+  --hub-size: 170px;
+  width: var(--ring-size);
+  height: var(--ring-size);
+  position: relative;
+  margin: 0 auto;
+  /* Subtle radial backdrop */
+  background: radial-gradient(circle at center,
+    color-mix(in srgb, var(--paper) 80%, transparent) 0%,
+    transparent 65%);
+
+  @media (max-width: 600px) {
+    --ring-size: 360px;
+    --phase-size: 108px;
+    --hub-size: 130px;
+  }
+}
+
+/* Slowly rotating dashed orbit */
+.agile-orbit {
+  position: absolute;
+  inset: 0;
+  border: 2px dashed color-mix(in srgb, #8fbfb0 60%, transparent);
+  border-radius: 50%;
+  animation: agile-orbit 28s linear infinite;
+}
+@keyframes agile-orbit {
+  to { transform: rotate(360deg); }
+}
+
+/* Central hub */
+.agile-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  width: var(--hub-size);
+  height: var(--hub-size);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 30% 25%, #ffffff, #f6f5f1 80%);
+  color: var(--ink);
+  border: 4px solid var(--paper-card);
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 18px 40px -20px rgba(0,0,0,0.4),
+    inset 0 2px 6px rgba(255,255,255,0.5);
+  z-index: 5;
+  animation: agile-pulse 3s ease-in-out infinite;
+  .agile-center-label {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    background: linear-gradient(135deg, #2f5d50, #8fbfb0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    line-height: 1;
+  }
+  .agile-center-sub {
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-top: 0.2rem;
+  }
+}
+@keyframes agile-pulse {
+  0%, 100% { box-shadow: 0 0 0 1px var(--line), 0 18px 40px -20px rgba(0,0,0,0.4), inset 0 2px 6px rgba(255,255,255,0.5), 0 0 0 0 color-mix(in srgb, #8fbfb0 40%, transparent); }
+  50%      { box-shadow: 0 0 0 1px var(--line), 0 18px 40px -20px rgba(0,0,0,0.4), inset 0 2px 6px rgba(255,255,255,0.5), 0 0 0 16px color-mix(in srgb, #8fbfb0 0%, transparent); }
+}
+
+/* Phase pills positioned around the ring using CSS custom properties.
+   The angle starts at -90deg (top), increments by 360 / total. */
+.agile-phase {
+  --angle: calc((var(--idx) / var(--total)) * 360deg - 90deg);
+  --radius: calc(var(--ring-size) / 2 - var(--phase-size) / 2);
+  position: absolute;
+  top: 50%; left: 50%;
+  width: var(--phase-size);
+  height: var(--phase-size);
+  margin: calc(var(--phase-size) / -2) 0 0 calc(var(--phase-size) / -2);
+  transform: rotate(var(--angle)) translate(var(--radius)) rotate(calc(var(--angle) * -1));
+  /* Hover-pop and entry animation */
+  animation: agile-phase-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(var(--idx) * 0.12s + 0.2s);
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  cursor: pointer;
+}
+
+@keyframes agile-phase-in {
+  from { opacity: 0; transform: rotate(var(--angle)) translate(0) rotate(calc(var(--angle) * -1)) scale(0.4); }
+  to   { opacity: 1; transform: rotate(var(--angle)) translate(var(--radius)) rotate(calc(var(--angle) * -1)) scale(1); }
+}
+
+.agile-phase-inner {
+  width: 100%; height: 100%;
+  border-radius: 50%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  color: #ffffff;
+  text-align: center;
+  padding: 0.55rem 0.4rem;
+  gap: 0.25rem;
+  box-shadow:
+    0 12px 30px -14px rgba(0,0,0,0.45),
+    inset 0 -2px 8px rgba(0,0,0,0.18);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  /* Stronger crisp text rendering on top of gradients */
+  text-shadow: 0 1px 2px rgba(0,0,0,0.45);
+  &::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 25%, rgba(255,255,255,0.28), transparent 65%);
+    pointer-events: none;
+  }
+  /* Subtle inner darker ring at the bottom for depth + reading anchor */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 4px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.18);
+    pointer-events: none;
+  }
+}
+
+.agile-phase-num {
+  font-family: 'Fraunces', serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #ffffff;
+  opacity: 0.95;
+  background: rgba(0,0,0,0.2);
+  padding: 1px 8px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+  position: relative; z-index: 1;
+}
+.agile-phase-icon {
+  font-size: 1.6rem !important;
+  margin: 0.1rem 0;
+  color: #ffffff;
+  filter: drop-shadow(0 2px 3px rgba(0,0,0,0.35));
+  position: relative; z-index: 1;
+}
+.agile-phase-title {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+  padding: 0 0.35rem;
+  /* Avoid mid-word breaks like "Implemen tation" — prefer wrapping
+     between whole words, with hyphenation as a last resort. */
+  overflow-wrap: normal;
+  word-break: keep-all;
+  hyphens: auto;
+  max-width: 100%;
+  /* Cap at 2 lines so long titles don't overflow the pill */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  position: relative; z-index: 1;
+}
+
+.agile-phase:hover,
+.agile-phase.is-active {
+  z-index: 6;
+  .agile-phase-inner {
+    transform: scale(1.15);
+    box-shadow: 0 20px 40px -10px rgba(0,0,0,0.45);
+  }
+}
+
+/* Six-color palette tuned so white text always has ~4.5:1 WCAG contrast */
+.agile-phase-0 .agile-phase-inner { background: linear-gradient(135deg, #ef4444, #991b1b); }   /* red */
+.agile-phase-1 .agile-phase-inner { background: linear-gradient(135deg, #f97316, #c2410c); }   /* orange */
+.agile-phase-2 .agile-phase-inner { background: linear-gradient(135deg, #ca8a04, #854d0e); }   /* darker amber (was yellow) */
+.agile-phase-3 .agile-phase-inner { background: linear-gradient(135deg, #2563eb, #1e3a8a); }   /* blue */
+.agile-phase-4 .agile-phase-inner { background: linear-gradient(135deg, #9333ea, #581c87); }   /* purple */
+.agile-phase-5 .agile-phase-inner { background: linear-gradient(135deg, #059669, #064e3b); }   /* green */
+
+/* Details panel on the right */
+.agile-details {
+  background: var(--paper-card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 2rem 2.2rem;
+  box-shadow: 0 18px 50px -30px rgba(0,0,0,0.25);
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  .agile-details-num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.6rem;
+    display: inline-block;
+    padding: 4px 12px;
+    background: var(--accent-soft);
+    border-radius: 999px;
+  }
+  h4 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.8rem;
+    margin: 0.8rem 0 1rem;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  p {
+    color: var(--ink-soft);
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+}
+
 /* ===== SDLC ===== */
 .process {
   background: color-mix(in srgb, var(--ink) 85%, transparent);
   backdrop-filter: blur(2px);
+  .section-subtitle strong {
+    color: #8fbfb0;
+    font-weight: 700;
+  }
   color: var(--paper);
   .label { color: #8fbfb0; }
   .section-title { color: var(--paper); }
@@ -713,6 +1007,37 @@ html[data-theme="dark"] .sdlc-step p {
 
 #education {
   padding-bottom: 136px;
+}
+
+/* Mobile-only theme toggle that sits to the LEFT of the burger menu.
+   Hidden on desktop (the in-menu toggle handles that). */
+.navbar .nav-actions .theme-toggle-mobile {
+  display: none;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid var(--line);
+  color: var(--ink-soft);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  margin-right: 0.6rem;
+  transition: all var(--transition);
+  .material-icons { font-size: 1.1rem; }
+  &:hover {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  @media (max-width: 900px) {
+    display: inline-flex;
+  }
+}
+
+/* On mobile, the in-menu toggle is redundant — hide it so we don't show
+   the same control twice when the burger opens. */
+@media (max-width: 900px) {
+  .navbar .nav-links .nav-theme-item { display: none; }
 }
 
 /* Nav theme-toggle list item (sits after Contact in the nav links) */
@@ -905,9 +1230,60 @@ footer { border-top: 1px solid var(--line); padding: 56px 0; }
   }
   .footer-brand-col { grid-column: 1 / -1; }
 }
+
+/* Mobile: keep link columns SIDE BY SIDE (don't collapse to one column).
+   Brand still spans full width above them. */
 @media (max-width: 560px) {
-  .footer-top { grid-template-columns: 1fr; gap: 2rem; }
-  .footer-bottom { flex-direction: column; text-align: center; }
+  .footer { padding: 3rem 0 1.25rem; }
+  .footer-top {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    padding-bottom: 2rem;
+    position: relative;  /* anchor for the floating resume CTA */
+  }
+  .footer-brand-col {
+    grid-column: 1 / -1;
+    text-align: left;
+    /* Leave room on the right for the floating resume CTA */
+    padding-right: 7rem;
+  }
+  .footer-heading {
+    font-size: 0.7rem;
+    margin-bottom: 0.75rem;
+  }
+  .footer-links li a,
+  .footer-contact li,
+  .footer-contact li a {
+    font-size: 0.78rem;
+  }
+  .footer-contact li {
+    flex-wrap: wrap;
+    word-break: break-word;
+    .material-icons { font-size: 0.9rem; }
+  }
+
+  /* Move the Resume button OUT of the Get In Touch column and pin it to
+     the top-right of the footer's top area on mobile. */
+  .footer-cta {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 0;
+    padding: 0.55rem 1.1rem !important;
+    font-size: 0.8rem !important;
+    font-weight: 600;
+    border-radius: 999px;
+    box-shadow: 0 6px 16px -8px rgba(0,0,0,0.3);
+    z-index: 2;
+    .material-icons { font-size: 1rem; }
+  }
+
+  .footer-bottom { flex-direction: column; text-align: center; gap: 0.75rem; }
+}
+
+/* Very narrow phones: drop to 2 columns rather than crunching 3 too much */
+@media (max-width: 380px) {
+  .footer-top { grid-template-columns: 1fr 1fr; }
 }
 
 @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(8px); } }

@@ -27,6 +27,19 @@ h2 { margin-bottom: 0.25rem; }
 
 form { margin-bottom: 1.5rem; }
 
+.login-submit {
+  width: 100%;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  padding: 0.85rem 1.5rem !important;
+  font-size: 0.95rem !important;
+  font-weight: 600;
+  text-align: center;
+  .material-icons { font-size: 1.15rem; }
+}
+
 .back-link {
   display: block; text-align: center;
   font-size: 0.85rem; color: var(--text-muted);

@@ -59,6 +59,46 @@ body {
   transition: color 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* ===== Scroll-reveal animations ===== */
+/* Elements with .reveal start hidden + offset. When they enter the viewport
+   the .revealed class is added (by an IntersectionObserver in the page
+   component) and they animate into place with a soft cubic-bezier curve. */
+.reveal {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+.reveal-up    { transform: translateY(36px); }
+.reveal-down  { transform: translateY(-36px); }
+.reveal-left  { transform: translateX(-40px); }
+.reveal-right { transform: translateX(40px); }
+.reveal-zoom  { transform: scale(0.94); }
+.reveal-fade  { transform: none; }
+
+.reveal.revealed {
+  opacity: 1;
+  transform: translate(0, 0) scale(1);
+}
+
+/* Stagger helpers — drop in `.reveal-delay-N` to delay an element so
+   children of a single section animate one after another. */
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
+.reveal-delay-5 { transition-delay: 0.40s; }
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
 /* ===== Smooth theme toggle ===== */
 /* Class is added briefly while toggling theme, then removed so hover
    transitions stay snappy. Uses a long, soft cubic-bezier for a buttery

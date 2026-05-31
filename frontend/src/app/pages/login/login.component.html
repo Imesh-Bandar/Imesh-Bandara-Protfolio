@@ -18,8 +18,9 @@
         <label>Password</label>
         <input type="password" [(ngModel)]="password" name="password" placeholder="••••••••" required>
       </div>
-      <button type="submit" class="btn btn-primary" style="width:100%" [disabled]="loading">
-        {{ loading ? 'Signing in...' : 'Sign In' }}
+      <button type="submit" class="btn btn-primary login-submit" [disabled]="loading">
+        <span class="material-icons">{{ loading ? 'hourglass_top' : 'login' }}</span>
+        <span>{{ loading ? 'Signing in...' : 'Sign In' }}</span>
       </button>
     </form>
 

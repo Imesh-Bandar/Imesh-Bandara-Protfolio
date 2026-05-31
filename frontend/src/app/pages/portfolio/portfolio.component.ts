@@ -1,4 +1,4 @@
-import { Component, OnInit, inject, ChangeDetectorRef, HostListener } from '@angular/core';
+import { Component, OnInit, AfterViewInit, OnDestroy, inject, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { catchError, finalize } from 'rxjs/operators';
@@ -14,7 +14,7 @@ import { About, Project, Skill, Tool, Education, Experience, Feedback, Contact, 
   templateUrl: './portfolio.component.html',
   styleUrl: './portfolio.component.scss'
 })
-export class PortfolioComponent implements OnInit {
+export class PortfolioComponent implements OnInit, AfterViewInit, OnDestroy {
   private api = inject(ApiService);
   private cdr = inject(ChangeDetectorRef);
   theme = inject(ThemeService);
@@ -34,6 +34,23 @@ export class PortfolioComponent implements OnInit {
   loading = true;
   scrolled = false;
   currentYear = new Date().getFullYear();
+  hoveredPhase: number | null = null;
+
+  /** Default 6 Agile phases shown when no SDLC data exists in the backend
+      yet — guarantees the ring is always visible. */
+  private readonly defaultPhases: SdlcPhase[] = [
+    { phase: '1', title: 'Requirements', description: 'Gather project goals, scope, and user stories with the client through discovery sessions.',         icon: 'assignment',     order: 0 },
+    { phase: '2', title: 'Design',       description: 'Wireframe, prototype, and design the UI/UX flow before writing a single line of code.',              icon: 'design_services',order: 1 },
+    { phase: '3', title: 'Development',  description: 'Build the feature in short sprints with clean, modular, well-tested code.',                          icon: 'code',           order: 2 },
+    { phase: '4', title: 'Testing',      description: 'Run unit, integration, and manual QA tests to verify the feature works as intended.',                icon: 'bug_report',     order: 3 },
+    { phase: '5', title: 'Deployment',   description: 'Ship to staging, gather sign-off, and release to production with rollback safety nets.',             icon: 'rocket_launch',  order: 4 },
+    { phase: '6', title: 'Review',       description: 'Collect feedback, measure impact, and plan the next iteration — back to step 1.',                    icon: 'reviews',        order: 5 },
+  ];
+
+  /** Phases to render — backend data if present, otherwise the defaults. */
+  get displayPhases(): SdlcPhase[] {
+    return this.sdlc.length ? this.sdlc : this.defaultPhases;
+  }
 
   @HostListener('window:scroll')
   onWindowScroll() {
@@ -112,6 +129,39 @@ export class PortfolioComponent implements OnInit {
 
       this.cdr.markForCheck();
     });
+  }
+
+  /* ===== Scroll-reveal animation ===== */
+  private observer?: IntersectionObserver;
+
+  ngAfterViewInit() {
+    // Reduced-motion users get content shown immediately.
+    const reduce = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('revealed'));
+      return;
+    }
+
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          this.observer?.unobserve(entry.target); // one-shot reveal
+        }
+      });
+    }, {
+      threshold: 0.12,
+      rootMargin: '0px 0px -8% 0px'
+    });
+
+    // Defer slightly so all initial data binding completes first.
+    setTimeout(() => {
+      document.querySelectorAll('.reveal').forEach(el => this.observer!.observe(el));
+    }, 60);
+  }
+
+  ngOnDestroy() {
+    this.observer?.disconnect();
   }
 
   getStars(n: number): string {
