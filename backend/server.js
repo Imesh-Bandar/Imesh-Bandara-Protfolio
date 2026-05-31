@@ -28,6 +28,12 @@ const wildcardOrigins = [...allowedOrigins]
     return new RegExp(`^${escapedPattern}$`);
   });
 
+const defaultAllowedOriginPatterns = [
+  /^https?:\/\/localhost(?::\d+)?$/,
+  /^https:\/\/[a-z0-9-]+\.netlify\.app$/i,
+  /^https:\/\/[a-z0-9-]+\.netlify\.com$/i
+];
+
 const isOriginAllowed = (origin) => {
   if (!origin) {
     return true;
@@ -38,6 +44,10 @@ const isOriginAllowed = (origin) => {
   }
 
   if (wildcardOrigins.some(pattern => pattern.test(origin))) {
+    return true;
+  }
+
+  if (defaultAllowedOriginPatterns.some(pattern => pattern.test(origin))) {
     return true;
   }
 
