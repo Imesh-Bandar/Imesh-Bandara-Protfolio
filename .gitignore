@@ -1,2 +1,6 @@
-# Frontend environment
- 
+# Frontend environment variables
+.env
+.env.example
+# Backend environment variables
+backend/.env
+backend/.env.example
