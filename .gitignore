@@ -1,12 +1,2 @@
 # Frontend environment
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-
-# Backend environment
-/backend/.env
-/frontend/.env
-*.env
-# Example envs are safe to commit
-*.env.example
+ 
